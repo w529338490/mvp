@@ -182,8 +182,6 @@ public class NewsFragment extends RxFragment implements NewsView,DialogInterface
     {
 
         EventBus.getDefault().postSticky(new WebViewEvent(newsBean.getUrl(),newsBean.getTitle()));
-
-
         startActivity(new Intent(NewsFragment.this.getActivity(), WebActivity.class));
     }
 

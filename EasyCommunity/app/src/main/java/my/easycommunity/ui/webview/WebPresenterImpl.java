@@ -55,5 +55,6 @@ public class WebPresenterImpl implements webPresenter,WebInteractor.onCompletedL
         event =null;
         webInteractor =null;
         webView=null;
+        Logger.e("unsubscribe"+event);
     }
 }
