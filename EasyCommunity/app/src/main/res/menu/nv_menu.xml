@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/group_vedio">
+        <item
+            android:id="@+id/nav_video"
+            android:checkable="false"
+            android:icon="@drawable/ic_video"
+            android:title="视频"/>
+    </group>
+
+    <group android:id="@+id/group_story">
+        <item
+            android:id="@+id/nav_story"
+            android:checkable="false"
+            android:icon="@drawable/ic_story"
+            android:title="小说"/>
+    </group>
+
+    <group android:id="@+id/group_artcle">
+        <item
+            android:id="@+id/nav_artcle"
+            android:checkable="false"
+            android:icon="@drawable/ic_png"
+            android:title="每日阅读"/>
+    </group>
+
+
+    <group android:id="@+id/user">
+        <item
+            android:id="@+id/nav_user"
+            android:checkable="false"
+            android:icon="@drawable/ic_shujia"
+            android:title="个人中心"/>
+    </group>
+
+</menu>
