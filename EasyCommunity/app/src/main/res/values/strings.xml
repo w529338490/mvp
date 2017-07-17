@@ -2,4 +2,8 @@
     <string name="app_name">EasyCommunity</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">closed</string>
+    <string name="main_home">首页</string>
+    <string name="main_videos">视屏</string>
+    <string name="main_welfare">图片</string>
+    <string name="main_user">我</string>
 </resources>

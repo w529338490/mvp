@@ -2,7 +2,6 @@ package my.easycommunity.utill;
 
 import android.content.Context;
 import android.widget.Toast;
-import com.orhanobut.logger.Logger;
 import my.easycommunity.common.MyApplication;
 
 /**
@@ -13,28 +12,13 @@ public class ToastUtil
 {
     private Context context;
 
-    public static void show(String str)
+    public static void show(Object str)
     {
-
-        if (str != null && str.trim().length() != 0)
-        {
-            Toast.makeText(MyApplication.context, str, Toast.LENGTH_SHORT).show();
-        } else
-        {
-            ToastUtil.show("Error>>:  You Showed String is Null!!");
-            Logger.e("error for Str>>" + str);
-        }
-
+        Toast.makeText(MyApplication.context, str+"", Toast.LENGTH_SHORT).show();
     }
-    public static void showLong(String str)
+    public static void showLong(Object str)
     {
-    if (str != null && str.trim().length() != 0)
-    {
-        Toast.makeText(MyApplication.context, str, Toast.LENGTH_LONG).show();
-    } else
-    {
-        ToastUtil.show("Error>>:  You Showed String is Null!!");
-        Logger.e("error for Str>>" + str);
+     Toast.makeText(MyApplication.context, str +"", Toast.LENGTH_LONG).show();
     }
-   }
+
 }

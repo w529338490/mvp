@@ -16,8 +16,10 @@
 
 package my.easycommunity;
 
-public interface BaseView<T> {
+public interface BaseView {
 
-    void setPresenter(T presenter);
+    void showProgress();
+
+    void hideProgress();
 
 }
