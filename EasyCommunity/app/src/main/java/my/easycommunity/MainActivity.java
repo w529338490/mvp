@@ -1,7 +1,9 @@
 package my.easycommunity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -11,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,8 +21,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+
+import com.orhanobut.logger.Logger;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.util.ArrayList;
 import my.easycommunity.adapter.PaperAdapter;
@@ -43,7 +50,6 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     ViewPager pager;
     PaperAdapter adapter;
 
-
     @InjectView(R.id.nv)
     NavigationView nv;
 
@@ -56,10 +62,9 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     @InjectView(R.id.fragment_Container)
     FrameLayout fragment_Container;
 
-    private FragmentManager fragmetManager;
-    private FragmentTransaction mCurTransaction = null;
-
+    private FragmentManager   fragmetManager =getSupportFragmentManager();
     private Fragment mCurrentFragment;
+
 
     ArrayList<Fragment> list = new ArrayList<>();
     private final String[] mTitles = {"头条", "科技", "社会", "国内", "娱乐"};
@@ -69,24 +74,35 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-
+        mCurrentFragment = VideoFragmet.newInstance();
 
         if(savedInstanceState == null) {
-            fragmetManager =getSupportFragmentManager();
+            FragmentTransaction mCurTransaction = null;
             mCurTransaction=   fragmetManager.beginTransaction();
-            mCurrentFragment = VideoFragmet.newInstance();
-            mCurTransaction.add(R.id.fragment_Container, VideoFragmet.newInstance(), "video");
-            mCurTransaction.add(R.id.fragment_Container, PhotoFragment.newInstance(),"photo");
-            mCurTransaction.add(R.id.fragment_Container, UserFrament.newInstance(),"user");
+            mCurTransaction.add(R.id.fragment_Container, VideoFragmet.newInstance(), "video")
+                    .hide(VideoFragmet.newInstance());
+            mCurTransaction.add(R.id.fragment_Container, PhotoFragment.newInstance(),"photo")
+                    .hide(PhotoFragment.newInstance());
+            mCurTransaction.add(R.id.fragment_Container, UserFrament.newInstance(),"user")
+                   .hide(UserFrament.newInstance());
             mCurTransaction.commitAllowingStateLoss();
+        }else {
+            getSupportFragmentManager().beginTransaction()
+                    .hide(fragmetManager.findFragmentByTag("video")).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .hide(fragmetManager.findFragmentByTag("photo")).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .hide(fragmetManager.findFragmentByTag("user")).commit();
         }
+
+
 
         initView();
         initData();
     }
 
     private void initView() {
-
+        showHome();
 
         nv.setNavigationItemSelectedListener(this);
         tab.setupWithViewPager(pager);
@@ -104,26 +120,25 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
                 this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
-        fragmetManager=  getSupportFragmentManager();
-
-
     }
 
     private void initData()
     {
-
-
-        for (int i = 0; i < mTitles.length; i++)
+        for (int i = 0; i < mTitles.length-2; i++)
         {
             NewsFragment newsf = NewsFragment.newInstance(i,appBarLayout);
             list.add(newsf);
         }
-
         adapter = new PaperAdapter(getSupportFragmentManager(), list, mTitles);
         pager.setAdapter(adapter);
-
-
+        pager.addOnAdapterChangeListener(new ViewPager.OnAdapterChangeListener()
+        {
+            @Override
+            public void onAdapterChanged(@NonNull ViewPager viewPager, @Nullable PagerAdapter oldAdapter, @Nullable PagerAdapter newAdapter)
+            {
+               Logger.e("oldAdapter======"+oldAdapter+"newAdapter================"+newAdapter);
+            }
+        });
         tab_bottom.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -131,27 +146,25 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
                         switch (item.getItemId()){
                             case R.id.item_home:
-                                ToastUtil.show("首页");
                                 showHome();
                                 break;
                             case R.id.item_videos:
-
                                 goneHome();
-                                ToastUtil.show("视屏");
                                 Fragment fFragment = fragmetManager.findFragmentByTag("video");
-                                changeBottomFragment(fFragment);
+                                changeBottomFragment(fFragment,"video");
                                 break;
                             case R.id.item_welfare:
                                 goneHome();
                                 Fragment pFragment = fragmetManager.findFragmentByTag("photo");
-                                changeBottomFragment(pFragment);
-                                ToastUtil.show("图片");
+
+                               changeBottomFragment(pFragment,"photo");
+
                                 break;
                             case R.id.item_user:
                                 goneHome();
                                 Fragment uFragment = fragmetManager.findFragmentByTag("user");
-                                changeBottomFragment(uFragment);
-                                ToastUtil.show("我");
+                                changeBottomFragment(uFragment,"user");
+
                                 break;
                         }
                         return true;
@@ -159,15 +172,19 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
                 });
     }
 
-    private void changeBottomFragment(Fragment fFragment) {
-        if (mCurrentFragment != null) {
+    private void changeBottomFragment(Fragment fFragment,String name) {
+
+        if( mCurrentFragment.isAdded()){
+            FragmentTransaction transaction = fragmetManager.beginTransaction();
+            transaction.hide(mCurrentFragment).commit();
             mCurrentFragment.setMenuVisibility(false);
             mCurrentFragment.setUserVisibleHint(false);
         }
-        if (fFragment != null) {
-
-            fFragment.setMenuVisibility(false);
-            fFragment.setUserVisibleHint(false);
+        if ( fFragment.isAdded()) {
+            FragmentTransaction transaction = fragmetManager.beginTransaction();
+            transaction.show(fFragment).commit();
+            fFragment.setMenuVisibility(true);
+            fFragment.setUserVisibleHint(true);
         }
         mCurrentFragment =fFragment;
     }
@@ -220,8 +237,6 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         }
     }
 
-
-
     private void goneHome(){
         appBarLayout.setVisibility(View.GONE);
         pager.setVisibility(View.GONE);
@@ -234,5 +249,19 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     }
     private static String makeFragmentName(int viewId, long id) {
         return "android:switcher:" + viewId + ":" + id;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //newConfig.orientation获得当前屏幕状态是横向或者竖向
+        //Configuration.ORIENTATION_PORTRAIT 表示竖向
+        //Configuration.ORIENTATION_LANDSCAPE 表示横屏
+        if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
+            Toast.makeText(MainActivity.this, "现在是竖屏", Toast.LENGTH_SHORT).show();
+        }
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+            Toast.makeText(MainActivity.this, "现在是横屏", Toast.LENGTH_SHORT).show();
+        }
     }
 }

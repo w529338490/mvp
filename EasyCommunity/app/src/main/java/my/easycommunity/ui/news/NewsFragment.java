@@ -73,6 +73,8 @@ public class NewsFragment extends RxFragment implements NewsView,DialogInterface
     {
         view = inflater.inflate(R.layout.news_fragment, container, false);
         ButterKnife.inject(this,view);
+        newsPresenter =new NewsPresenterImpl(this.bindToLifecycle(),this);
+        progress.setVisibility(View.GONE);
         setUpView();
         setUpData();
         return view;
@@ -114,11 +116,11 @@ public class NewsFragment extends RxFragment implements NewsView,DialogInterface
     protected void setUpView()
     {
         type =this.getArguments().getInt("type");
-        newsPresenter =new NewsPresenterImpl(this.bindToLifecycle(),this);
+
         newsPresenter.start();
         newsPresenter.getDate(strType[type]);
         manager =new LinearLayoutManager(this.getContext());
-        recyclerView.setLayoutManager(manager);
+
 
     }
 
@@ -147,6 +149,7 @@ public class NewsFragment extends RxFragment implements NewsView,DialogInterface
     public void setData(List<Result.ResultBean.DataBean> list)
     {
         adapter =new NewsFragmentAdapter(list);
+        recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new NewsFragmentAdapter.OnItemClickListener()
         {
@@ -174,6 +177,14 @@ public class NewsFragment extends RxFragment implements NewsView,DialogInterface
     @Override
     public void reflssh()
     {
+
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        newsPresenter.getDate(strType[type]);
 
     }
 

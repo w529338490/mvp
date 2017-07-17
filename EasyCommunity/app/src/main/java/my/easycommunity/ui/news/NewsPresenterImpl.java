@@ -68,8 +68,9 @@ public class NewsPresenterImpl implements NewsPresenter
             {
                 if(list!=null){
                     listdataBeans = list;
-                    newsView.setData(list);
                     newsView.hideProgress();
+                    newsView.setData(list);
+
                 }
 
             }
