@@ -17,10 +17,7 @@
 package my.easycommunity;
 
 public interface BasePresenter {
-
-
     void start();
-
     void unsubscribe();
 
 }

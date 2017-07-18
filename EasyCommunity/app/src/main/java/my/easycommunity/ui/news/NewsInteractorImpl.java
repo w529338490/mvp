@@ -1,22 +1,14 @@
 package my.easycommunity.ui.news;
 
-import android.widget.Toast;
-
 import com.orhanobut.logger.Logger;
-
-import java.util.concurrent.TimeUnit;
-
-import my.easycommunity.adapter.NewsFragmentAdapter;
 import my.easycommunity.entity.news.Result;
 import my.easycommunity.net.Api;
 import my.easycommunity.net.service.NewsService;
 import rx.Observable;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Administrator on 2017/7/16.
@@ -26,24 +18,23 @@ public class NewsInteractorImpl implements NewsInteractor
 {
 
     public Subscription compositeSubscription;
-    NewsFragmentAdapter.OnItemClickListener listener;
+    private onCompletedLinster linster ;
 
-    public NewsInteractorImpl(NewsFragmentAdapter.OnItemClickListener listener)
-    {
-        this.listener = listener;
+    public NewsInteractorImpl(onCompletedLinster linster) {
+        this.linster = linster;
     }
 
     @Override
-    public  Subscription getData(String type, Observable.Transformer transformer, final onCompletedLinster linster)
+    public  void  getData(String type, Observable.Transformer transformer)
     {
-        return netData(type, transformer, linster);
+         netData(type, transformer);
     }
 
-    private Subscription netData(String type, Observable.Transformer transformer, final onCompletedLinster linster)
+    private void netData(String type, Observable.Transformer transformer)
     {
         NewsService service = Api.getInstance().getNewsService();
         Observable<Result> news= service.getNews(type);
-        Subscription subscription = news.subscribeOn(Schedulers.io())//指定获取数据在io子线程
+        compositeSubscription= news.subscribeOn(Schedulers.io())//指定获取数据在io子线程
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(transformer)
@@ -54,7 +45,9 @@ public class NewsInteractorImpl implements NewsInteractor
                     {
                         if (result.getError_code() ==0 &&result.getResult() !=null)
                         {
-                            linster.onSuccess(result.getResult().getData());
+                            linster.onSuccess(result.getResult().getData() ,compositeSubscription);
+                        }else {
+                            linster.onError();
                         }
 
                     }
@@ -67,8 +60,6 @@ public class NewsInteractorImpl implements NewsInteractor
                         linster.onError();
                     }
                 });
-        this.compositeSubscription =subscription;
-        return subscription;
     }
 
 }

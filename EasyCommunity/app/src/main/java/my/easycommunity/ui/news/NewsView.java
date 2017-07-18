@@ -16,11 +16,9 @@ public interface NewsView
 
     void setData(List<Result.ResultBean.DataBean> list);
 
-    void setError();
+    void showError();
 
     void addMore();
-
-    void reflssh();
 
     void onItemClickLinster(Result.ResultBean.DataBean newsBean);
 

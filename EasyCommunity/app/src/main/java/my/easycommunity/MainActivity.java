@@ -1,9 +1,7 @@
 package my.easycommunity;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -13,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,12 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-
-import com.orhanobut.logger.Logger;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.util.ArrayList;
 import my.easycommunity.adapter.PaperAdapter;
@@ -34,7 +27,6 @@ import my.easycommunity.ui.news.NewsFragment;
 import my.easycommunity.ui.photo.PhotoFragment;
 import my.easycommunity.ui.user.UserFrament;
 import my.easycommunity.ui.video.VideoFragmet;
-import my.easycommunity.utill.ToastUtil;
 
 public class MainActivity extends RxAppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
 
@@ -76,7 +68,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         ButterKnife.inject(this);
         mCurrentFragment = VideoFragmet.newInstance();
 
-        if(savedInstanceState == null) {
+        adapter = new PaperAdapter(getSupportFragmentManager(), mTitles);
+
             FragmentTransaction mCurTransaction = null;
             mCurTransaction=   fragmetManager.beginTransaction();
             mCurTransaction.add(R.id.fragment_Container, VideoFragmet.newInstance(), "video")
@@ -86,35 +79,21 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             mCurTransaction.add(R.id.fragment_Container, UserFrament.newInstance(),"user")
                    .hide(UserFrament.newInstance());
             mCurTransaction.commitAllowingStateLoss();
-        }else {
-            getSupportFragmentManager().beginTransaction()
-                    .hide(fragmetManager.findFragmentByTag("video")).commit();
-            getSupportFragmentManager().beginTransaction()
-                    .hide(fragmetManager.findFragmentByTag("photo")).commit();
-            getSupportFragmentManager().beginTransaction()
-                    .hide(fragmetManager.findFragmentByTag("user")).commit();
-        }
-
-
-
+            for (int i = 0; i < mTitles.length; i++)
+            {
+                NewsFragment newsf = NewsFragment.newInstance(i,appBarLayout);
+                list.add(newsf);
+            }
+              adapter.setList(list);
         initView();
         initData();
     }
 
     private void initView() {
         showHome();
-
+        pager.setAdapter(adapter);
         nv.setNavigationItemSelectedListener(this);
         tab.setupWithViewPager(pager);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-
         //设置Toolbar和DrawerLayout实现动画和联动
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -124,19 +103,13 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     private void initData()
     {
-        for (int i = 0; i < mTitles.length-2; i++)
-        {
-            NewsFragment newsf = NewsFragment.newInstance(i,appBarLayout);
-            list.add(newsf);
-        }
-        adapter = new PaperAdapter(getSupportFragmentManager(), list, mTitles);
-        pager.setAdapter(adapter);
-        pager.addOnAdapterChangeListener(new ViewPager.OnAdapterChangeListener()
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onAdapterChanged(@NonNull ViewPager viewPager, @Nullable PagerAdapter oldAdapter, @Nullable PagerAdapter newAdapter)
+            public void onClick(View v)
             {
-               Logger.e("oldAdapter======"+oldAdapter+"newAdapter================"+newAdapter);
+                mDrawerLayout.openDrawer(GravityCompat.START);
             }
         });
         tab_bottom.setOnNavigationItemSelectedListener(
@@ -156,15 +129,12 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
                             case R.id.item_welfare:
                                 goneHome();
                                 Fragment pFragment = fragmetManager.findFragmentByTag("photo");
-
-                               changeBottomFragment(pFragment,"photo");
-
+                                changeBottomFragment(pFragment,"photo");
                                 break;
                             case R.id.item_user:
                                 goneHome();
                                 Fragment uFragment = fragmetManager.findFragmentByTag("user");
                                 changeBottomFragment(uFragment,"user");
-
                                 break;
                         }
                         return true;
@@ -214,7 +184,6 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         switch (view.getId()){
 
         }
-
     }
 
     @Override
@@ -251,17 +220,22 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         return "android:switcher:" + viewId + ":" + id;
     }
 
+    //@Override
+    //public void onConfigurationChanged(Configuration newConfig) {
+    //    super.onConfigurationChanged(newConfig);
+    //    //newConfig.orientation获得当前屏幕状态是横向或者竖向
+    //    //Configuration.ORIENTATION_PORTRAIT 表示竖向
+    //    //Configuration.ORIENTATION_LANDSCAPE 表示横屏
+    //    if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
+    //        Toast.makeText(MainActivity.this, "现在是竖屏", Toast.LENGTH_SHORT).show();
+    //    }
+    //    if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+    //        Toast.makeText(MainActivity.this, "现在是横屏", Toast.LENGTH_SHORT).show();
+    //    }
+    //}
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        //newConfig.orientation获得当前屏幕状态是横向或者竖向
-        //Configuration.ORIENTATION_PORTRAIT 表示竖向
-        //Configuration.ORIENTATION_LANDSCAPE 表示横屏
-        if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
-            Toast.makeText(MainActivity.this, "现在是竖屏", Toast.LENGTH_SHORT).show();
-        }
-        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
-            Toast.makeText(MainActivity.this, "现在是横屏", Toast.LENGTH_SHORT).show();
-        }
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+           //不保存，界面以及fragment，fragmetManager信息，以便在 内存不足等极端情况下重启时候，重新构建项目
+      //  super.onSaveInstanceState(savedInstanceState);
     }
 }

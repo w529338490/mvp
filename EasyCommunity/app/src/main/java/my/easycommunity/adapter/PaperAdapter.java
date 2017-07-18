@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
-
 import java.util.List;
 
 /**
@@ -13,15 +12,17 @@ import java.util.List;
 
 public class PaperAdapter extends FragmentPagerAdapter
 {
-
     List<Fragment> list;
     String[] mTitles;
 
-    public PaperAdapter(FragmentManager fm, List<Fragment> list, String[] mTitles)
+    public PaperAdapter(FragmentManager fm, String[] mTitles)
     {
         super(fm);
-        this.list = list;
         this.mTitles = mTitles;
+    }
+
+    public void setList(List<Fragment> list){
+        this.list =list;
     }
 
     public PaperAdapter(FragmentManager fm)
@@ -30,15 +31,26 @@ public class PaperAdapter extends FragmentPagerAdapter
     }
 
     @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        Fragment fragment = (Fragment)object;
+        super.setPrimaryItem(container, position, object);
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        return super.instantiateItem(container, position);
+    }
+
+    @Override
     public Fragment getItem(int position)
     {
-        return list.get(position);
+        return list ==null ? null:list.get(position);
     }
 
     @Override
     public int getCount()
     {
-        return list.size();
+        return list==null ? 0 : list.size();
     }
 
     @Override

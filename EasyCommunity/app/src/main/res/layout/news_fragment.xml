@@ -32,6 +32,15 @@
                 android:visibility="visible"
                 />
         </FrameLayout>
+        <TextView
+            android:id="@+id/error_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="25dp"
+            android:visibility="gone"
+            android:text="简单社区..."
+            />
     </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 
 

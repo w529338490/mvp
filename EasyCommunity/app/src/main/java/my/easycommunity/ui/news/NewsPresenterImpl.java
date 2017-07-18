@@ -1,20 +1,17 @@
 package my.easycommunity.ui.news;
 
+import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
-
-import my.easycommunity.adapter.NewsFragmentAdapter;
 import my.easycommunity.entity.news.Result;
-import my.easycommunity.utill.ToastUtil;
 import rx.Observable;
 import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Administrator on 2017/7/16.
  */
 
-public class NewsPresenterImpl implements NewsPresenter
+public class NewsPresenterImpl implements NewsPresenter,NewsInteractor.onCompletedLinster
 {
     NewsInteractorImpl newsInteractor;
     NewsView newsView;
@@ -23,21 +20,13 @@ public class NewsPresenterImpl implements NewsPresenter
 
     private String type;
 
-    private List<Subscription>  compositeSubscription =new ArrayList<>();
+    private Subscription compositeSubscription ;
 
     public NewsPresenterImpl(Observable.Transformer transformer, NewsView newsView)
     {
         this.transformer = transformer;
         this.newsView = newsView;
-        this.newsInteractor = new NewsInteractorImpl(new NewsFragmentAdapter.OnItemClickListener()
-        {
-            @Override
-            public void getData(int position)
-            {
-
-            }
-        });
-
+        this.newsInteractor = new NewsInteractorImpl(this);
     }
 
     @Override
@@ -56,26 +45,8 @@ public class NewsPresenterImpl implements NewsPresenter
     public void getDate(String type)
     {
         this.type =type;
-          Subscription subscription = newsInteractor.getData(type, transformer, new NewsInteractor.onCompletedLinster()
-        {
-            @Override
-            public void onError()
-            {
-                newsView.setError();
-            }
-            @Override
-            public void onSuccess(List<Result.ResultBean.DataBean> list)
-            {
-                if(list!=null){
-                    listdataBeans = list;
-                    newsView.hideProgress();
-                    newsView.setData(list);
+        newsInteractor.getData(type, transformer);
 
-                }
-
-            }
-        });
-        compositeSubscription.add(subscription);
     }
 
     @Override
@@ -87,10 +58,9 @@ public class NewsPresenterImpl implements NewsPresenter
     @Override
     public void stopNetWork()
     {
-        if(compositeSubscription!=null){
-            for(Subscription subscription :compositeSubscription){
-                subscription.unsubscribe();
-            }
+        if(compositeSubscription!=null && !compositeSubscription.isUnsubscribed()){
+            compositeSubscription.unsubscribe();
+            Logger.e("compositeSubscription ===================is 取消");
         }
     }
 
@@ -101,5 +71,20 @@ public class NewsPresenterImpl implements NewsPresenter
             newsView.onItemClickLinster(listdataBeans.get(poition));
         }
 
+    }
+
+    @Override
+    public void onError() {
+        newsView.showError();
+    }
+
+    @Override
+    public void onSuccess(List<Result.ResultBean.DataBean> list, Subscription subscription) {
+        compositeSubscription=subscription;
+        if(list!=null){
+            listdataBeans = list;
+            newsView.hideProgress();
+            newsView.setData(list);
+        }
     }
 }

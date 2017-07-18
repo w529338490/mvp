@@ -1,7 +1,6 @@
 package my.easycommunity.ui.news;
 
 import java.util.List;
-
 import my.easycommunity.entity.news.Result;
 import rx.Observable;
 import rx.Subscription;
@@ -14,9 +13,9 @@ public interface NewsInteractor
 {
     interface  onCompletedLinster{
         void onError();
-        void onSuccess(List<Result.ResultBean.DataBean> list);
+        void onSuccess(List<Result.ResultBean.DataBean> list , Subscription subscription);
 
     }
-    Subscription getData(String type, Observable.Transformer  transformer, onCompletedLinster linster);
+    void getData(String type, Observable.Transformer  transformer);
 
 }

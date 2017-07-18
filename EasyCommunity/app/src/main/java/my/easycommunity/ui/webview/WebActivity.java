@@ -1,39 +1,28 @@
 package my.easycommunity.ui.webview;
 
-import android.content.DialogInterface;
-import android.os.Build;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
-
-import com.google.gson.annotations.JsonAdapter;
-import com.orhanobut.logger.Logger;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.orhanobut.logger.Logger;
 import de.greenrobot.event.EventBus;
 import my.easycommunity.R;
 import my.easycommunity.eventbus.WebViewEvent;
 import my.easycommunity.utill.MarqueeTextView;
 
-import static com.orhanobut.logger.Logger.init;
-import static com.orhanobut.logger.Logger.log;
-
 public class WebActivity extends AppCompatActivity implements webView,View.OnClickListener,View.OnTouchListener
 {
     @InjectView(R.id.toolbar)
     Toolbar toobar;
-
     @InjectView(R.id.webView)
     WebView webView;
     @InjectView(R.id.tittle)

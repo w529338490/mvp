@@ -36,11 +36,16 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public OnItemClickListener listener;
 
-    public NewsFragmentAdapter( List<Result.ResultBean.DataBean> data)
-    {
+    public NewsFragmentAdapter() {
         this.context = MyApplication.context;
         this.data = data;
         inflaters = LayoutInflater.from(context);
+    }
+
+    public void setData( List<Result.ResultBean.DataBean> data)
+    {
+        this.data = data;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -51,7 +56,6 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         {
             case NOFOOT:
                 holder = new MyHolder(inflaters.inflate(R.layout.news_adapter, parent, false));
-
                 this.parent = (RecyclerView) parent;
                 break;
 
@@ -70,18 +74,10 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((MyHolder) holder).tittle.setText(data.get(position).getTitle());
             ((MyHolder) holder).date.setText(data.get(position).getDate());
 
-            ((MyHolder) holder).view.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-
-                }
-            });
             Glide.with(context)
                     .load(data.get(position).getThumbnail_pic_s())
+                    .override(150,150)
                     .centerCrop()
-                    .crossFade(1500)
                     .into(((MyHolder) holder).pic);
 
             ((MyHolder) holder).view.setOnClickListener(new View.OnClickListener()
@@ -96,13 +92,12 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 }
             });
-
         }
     }
     @Override
     public int getItemCount()
     {
-        return data.size();
+        return data == null?0:data.size();
     }
 
     @Override
@@ -118,8 +113,6 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView pic;
         ImageView imag;
         LinearLayout view;
-
-
         public MyHolder(View itemView)
         {
             super(itemView);
@@ -134,8 +127,6 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     class MyHolder_foot extends RecyclerView.ViewHolder
     {
-
-
         public MyHolder_foot(View itemView)
         {
             super(itemView);

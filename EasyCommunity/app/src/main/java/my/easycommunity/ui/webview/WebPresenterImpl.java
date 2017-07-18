@@ -28,13 +28,11 @@ public class WebPresenterImpl implements webPresenter,WebInteractor.onCompletedL
         webInteractor.checkData(event.getUrl(),event.getTitttle() );
     }
 
-
     @Override
     public void onError()
     {
 
     }
-
     @Override
     public void onSuccess()
     {
