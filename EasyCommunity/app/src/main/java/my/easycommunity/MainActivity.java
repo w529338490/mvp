@@ -76,14 +76,6 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         ButterKnife.inject(this);
         mCurrentFragment = VideoFragmet.newInstance();
         adapter = new PaperAdapter(getSupportFragmentManager(), mTitles);
-        if (netWorkStateReceiver == null)
-        {
-            netWorkStateReceiver = new NetWorkStateReceiver();
-        }
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(netWorkStateReceiver, filter);
-
 
         if(savedInstanceState == null){
             FragmentTransaction mCurTransaction = null;
@@ -215,41 +207,21 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        //在onResume()方法注册
-        //if (netWorkStateReceiver == null)
-        //{
-        //    netWorkStateReceiver = new NetWorkStateReceiver();
-        //}
-        //IntentFilter filter = new IntentFilter();
-        //filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        //registerReceiver(netWorkStateReceiver, filter);
+        if (netWorkStateReceiver == null)
+        {
+            netWorkStateReceiver = new NetWorkStateReceiver();
+        }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(netWorkStateReceiver, filter);
     }
     //onPause()方法注销
     @Override
     protected void onPause() {
-        unregisterReceiver(netWorkStateReceiver);
-        super.onPause();
-    }
-    @Override
-    public void onBackPressed()
-    {
-        if (mDrawerLayout.isDrawerOpen(nv))
-        {
-            mDrawerLayout.closeDrawer(nv);
-            return;
-        }
-        if (System.currentTimeMillis() - nowTime > 2000)
-        {
-            nowTime = System.currentTimeMillis();
-            Snackbar snackbar = Snackbar.make(mDrawerLayout, "再按一次返回键退出程序", Snackbar.LENGTH_SHORT);
-            snackbar.getView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            snackbar.show();
-        } else
-        {
-            finish();
-        }
-    }
 
+        super.onPause();
+        unregisterReceiver(netWorkStateReceiver);
+    }
     private void goneHome(){
         appBarLayout.setVisibility(View.GONE);
         pager.setVisibility(View.GONE);
@@ -260,10 +232,6 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         pager.setVisibility(View.VISIBLE);
         fragment_Container.setVisibility(View.GONE);
     }
-    private static String makeFragmentName(int viewId, long id) {
-        return "android:switcher:" + viewId + ":" + id;
-    }
-
     //用户离开界面 (例如 按home键)
     @Override
     protected void onUserLeaveHint() {
@@ -284,11 +252,29 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         }
         super.onSaveInstanceState(savedInstanceState);
     }
-
+    @Override
+    public void onBackPressed()
+    {
+        if (mDrawerLayout.isDrawerOpen(nv))
+        {
+            mDrawerLayout.closeDrawer(nv);
+            return;
+        }
+        if (System.currentTimeMillis() - nowTime > 2000)
+        {
+            nowTime = System.currentTimeMillis();
+            Snackbar snackbar = Snackbar.make(mDrawerLayout, "再按一次返回键退出程序", Snackbar.LENGTH_SHORT);
+            snackbar.getView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            snackbar.show();
+        } else
+        {
+            finish();
+        }
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        unregisterReceiver(netWorkStateReceiver);
     }
 
 }

@@ -20,8 +20,10 @@ public class Api
 {
     private  static  Api instance;
     private static OkHttpClient.Builder builder;
+
     //retrofit2初始化GsonConverterFactory，转化Json 数据
     private Converter.Factory factory = GsonConverterFactory.create();
+
     //services；
     private NewsService newsService;
     private PhotoService photoService ;
@@ -52,18 +54,11 @@ public class Api
         builder.addInterceptor(loggingInterceptor);
         //请求 超时 时间为5秒
         builder.connectTimeout(5, TimeUnit.SECONDS);
+
     }
     public <T> T getService( Class cls) {
         String serviceName =cls.getName();
-        String url = "";
-        switch (serviceName){
-            case "my.easycommunity.net.service.NewsService":
-                url=BaseUrl.uri_news;
-                break;
-            case "my.easycommunity.net.service.PhotoService":
-                url=BaseUrl.url_photo;
-                break;
-        }
+        String url = getBaseUrl(serviceName);
         Retrofit retrofit =new Retrofit.Builder()
                 .client(builder.build())
                 .baseUrl(url)
@@ -71,5 +66,19 @@ public class Api
                 .addConverterFactory(factory)
                 .build();
         return (T) retrofit.create(cls);
+    }
+
+    private String getBaseUrl(String serviceName)
+    {
+        String url = "";
+        switch (serviceName){
+            case "my.easycommunity.net.service.NewsService":
+                url= BaseUrl.uri_news;
+                break;
+            case "my.easycommunity.net.service.PhotoService":
+                url=BaseUrl.url_photo;
+                break;
+        }
+        return url;
     }
 }

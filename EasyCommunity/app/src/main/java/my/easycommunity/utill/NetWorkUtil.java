@@ -13,6 +13,7 @@ import java.util.Enumeration;
  */
 public class NetWorkUtil {
     public static boolean networkCanUse(Context context) {
+
         ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netinfo = connectivityManager.getActiveNetworkInfo();
         return netinfo != null && netinfo.isConnected();

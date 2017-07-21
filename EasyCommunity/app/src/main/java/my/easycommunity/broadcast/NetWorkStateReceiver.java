@@ -13,13 +13,15 @@ import my.easycommunity.utill.ToastUtil;
  */
 public class NetWorkStateReceiver extends BroadcastReceiver {
 
+    int count =1;
     @Override
     public void onReceive(Context context, Intent intent) {
-        Logger.e("================="+this);
 
-        if ( context!=null && !NetWorkUtil.networkCanUse(context)) {
+        if ( context!=null && !NetWorkUtil.networkCanUse(context) &&count<=1) {
                 ToastUtil.show("亲，你已进入无网世界！");
-
+            count++;
+        }else {
+            count =1;
         }
     }
 }

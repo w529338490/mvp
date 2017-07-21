@@ -47,6 +47,7 @@ public class NewsFragment extends RxFragment implements NewsView,View.OnClickLis
     private String[] strType = new String[]{"top", "keji", "shehui", "guonei", "yule"};
     private int type = 0;
     private View view;
+    private boolean fistLoad =false ;
     public static NewsFragment newInstance(int type,AppBarLayout appBarLayout)
     {
         NewsFragment newsFragment = new NewsFragment();
@@ -73,6 +74,7 @@ public class NewsFragment extends RxFragment implements NewsView,View.OnClickLis
         newsPresenter =new NewsPresenterImpl(this.bindToLifecycle(),this);
         type =this.getArguments().getInt("type");
         newsPresenter.start();
+        fistLoad=true;
         addNetData();
         manager =new LinearLayoutManager(this.getContext());
         error_tv.setOnClickListener(this);
@@ -94,6 +96,7 @@ public class NewsFragment extends RxFragment implements NewsView,View.OnClickLis
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        fistLoad=false;
                         addNetData();
                         refreshLayout.finishRefreshing();
                     }
@@ -159,6 +162,7 @@ public class NewsFragment extends RxFragment implements NewsView,View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.error_tv:
+                fistLoad =false;
                      addNetData();
                 break;
         }
@@ -166,6 +170,7 @@ public class NewsFragment extends RxFragment implements NewsView,View.OnClickLis
     //加载前，先判断网络
 
     public  void addNetData(){
+
         if ( getContext()!=null && NetWorkUtil.networkCanUse(getContext())) {
             ProssBarUtil.showBar(progress);
             ProssBarUtil.hideBar(error_tv);
@@ -176,7 +181,9 @@ public class NewsFragment extends RxFragment implements NewsView,View.OnClickLis
             if( adapter !=null && adapter.getItemCount()!=0){
                 ProssBarUtil.hideBar(error_tv);
             }
-            ToastUtil.show("请检测你的网络！");
+            if(!fistLoad){
+                ToastUtil.show("请检测你的网络！");
+            }
         }
     }
 
@@ -187,6 +194,7 @@ public class NewsFragment extends RxFragment implements NewsView,View.OnClickLis
         super.setUserVisibleHint(isVisibleToUser);
         if (!isVisibleToUser && isAdded())
         {
+
             newsPresenter.stopNetWork();
         }
     }

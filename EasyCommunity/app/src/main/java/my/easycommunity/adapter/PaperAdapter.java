@@ -61,7 +61,7 @@ public class PaperAdapter extends FragmentPagerAdapter
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object)
-    {//不销毁
-
+    {
+        //不销毁
     }
 }
