@@ -14,7 +14,7 @@ public class ToastUtil
 
     public static void show(Object str)
     {
-        Toast.makeText(MyApplication.context, str+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MyApplication.context, str+"",Toast.LENGTH_SHORT).show();
     }
     public static void showLong(Object str)
     {

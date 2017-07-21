@@ -32,7 +32,7 @@ public class NewsInteractorImpl implements NewsInteractor
 
     private void netData(String type, Observable.Transformer transformer)
     {
-        NewsService service = Api.getInstance().getNewsService();
+        NewsService service = Api.getInstance().<NewsService>getService(NewsService.class);
         Observable<Result> news= service.getNews(type);
         compositeSubscription= news.subscribeOn(Schedulers.io())//指定获取数据在io子线程
                 .unsubscribeOn(Schedulers.io())

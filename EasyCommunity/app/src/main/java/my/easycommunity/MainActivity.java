@@ -1,5 +1,7 @@
 package my.easycommunity;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -23,6 +25,7 @@ import butterknife.InjectView;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.util.ArrayList;
 import my.easycommunity.adapter.PaperAdapter;
+import my.easycommunity.broadcast.NetWorkStateReceiver;
 import my.easycommunity.ui.news.NewsFragment;
 import my.easycommunity.ui.photo.PhotoFragment;
 import my.easycommunity.ui.user.UserFrament;
@@ -32,6 +35,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     @InjectView(R.id.mDrawerLayout)
     DrawerLayout mDrawerLayout;
+
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -57,9 +61,13 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     private FragmentManager   fragmetManager =getSupportFragmentManager();
     private Fragment mCurrentFragment;
 
+    //网络变化 broadcast
+    private NetWorkStateReceiver netWorkStateReceiver;;
 
     ArrayList<Fragment> list = new ArrayList<>();
     private final String[] mTitles = {"头条", "科技", "社会", "国内", "娱乐"};
+    boolean fromSavedInstanceState  = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -67,18 +75,39 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         mCurrentFragment = VideoFragmet.newInstance();
-
         adapter = new PaperAdapter(getSupportFragmentManager(), mTitles);
+        if (netWorkStateReceiver == null)
+        {
+            netWorkStateReceiver = new NetWorkStateReceiver();
+        }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(netWorkStateReceiver, filter);
 
+
+        if(savedInstanceState == null){
             FragmentTransaction mCurTransaction = null;
-            mCurTransaction=   fragmetManager.beginTransaction();
+            mCurTransaction = fragmetManager.beginTransaction();
             mCurTransaction.add(R.id.fragment_Container, VideoFragmet.newInstance(), "video")
                     .hide(VideoFragmet.newInstance());
             mCurTransaction.add(R.id.fragment_Container, PhotoFragment.newInstance(),"photo")
                     .hide(PhotoFragment.newInstance());
             mCurTransaction.add(R.id.fragment_Container, UserFrament.newInstance(),"user")
-                   .hide(UserFrament.newInstance());
+                    .hide(UserFrament.newInstance());
             mCurTransaction.commitAllowingStateLoss();
+        }else {
+            getSupportFragmentManager().beginTransaction()
+                    .hide(getSupportFragmentManager().findFragmentByTag("video"))
+                    .commitAllowingStateLoss();
+
+            getSupportFragmentManager().beginTransaction()
+                    .hide(getSupportFragmentManager().findFragmentByTag("photo"))
+                    .commitAllowingStateLoss();
+
+            getSupportFragmentManager().beginTransaction()
+                    .hide(getSupportFragmentManager().findFragmentByTag("user"))
+                    .commitAllowingStateLoss();
+        }
             for (int i = 0; i < mTitles.length; i++)
             {
                 NewsFragment newsf = NewsFragment.newInstance(i,appBarLayout);
@@ -165,7 +194,6 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         switch (item.getItemId())
         {
             case R.id.nav_user:
-
                 break;
             case R.id.nav_video:
                 break;
@@ -180,12 +208,28 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-
         switch (view.getId()){
-
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //在onResume()方法注册
+        //if (netWorkStateReceiver == null)
+        //{
+        //    netWorkStateReceiver = new NetWorkStateReceiver();
+        //}
+        //IntentFilter filter = new IntentFilter();
+        //filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        //registerReceiver(netWorkStateReceiver, filter);
+    }
+    //onPause()方法注销
+    @Override
+    protected void onPause() {
+        unregisterReceiver(netWorkStateReceiver);
+        super.onPause();
+    }
     @Override
     public void onBackPressed()
     {
@@ -220,22 +264,31 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         return "android:switcher:" + viewId + ":" + id;
     }
 
-    //@Override
-    //public void onConfigurationChanged(Configuration newConfig) {
-    //    super.onConfigurationChanged(newConfig);
-    //    //newConfig.orientation获得当前屏幕状态是横向或者竖向
-    //    //Configuration.ORIENTATION_PORTRAIT 表示竖向
-    //    //Configuration.ORIENTATION_LANDSCAPE 表示横屏
-    //    if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
-    //        Toast.makeText(MainActivity.this, "现在是竖屏", Toast.LENGTH_SHORT).show();
-    //    }
-    //    if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
-    //        Toast.makeText(MainActivity.this, "现在是横屏", Toast.LENGTH_SHORT).show();
-    //    }
-    //}
+    //用户离开界面 (例如 按home键)
+    @Override
+    protected void onUserLeaveHint() {
+        fromSavedInstanceState =false;
+        super.onUserLeaveHint();
+    }
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-           //不保存，界面以及fragment，fragmetManager信息，以便在 内存不足等极端情况下重启时候，重新构建项目
-      //  super.onSaveInstanceState(savedInstanceState);
+        //不保存 非新闻页面的Fragment
+      //  不保存，界面以及fragment，fragmetManager信息，以便在 内存不足等极端情况下重启时候，重新构建项目
+        if(fromSavedInstanceState){
+            for(int i =3 ; i<getSupportFragmentManager().getFragments().size();i++){
+                getSupportFragmentManager().beginTransaction()
+                        .remove(getSupportFragmentManager()
+                                .getFragments().get(i))
+                        .commitAllowingStateLoss();
+            }
+        }
+        super.onSaveInstanceState(savedInstanceState);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
 }

@@ -1,10 +1,9 @@
 package my.easycommunity.net;
 
 import com.orhanobut.logger.Logger;
-
 import java.util.concurrent.TimeUnit;
-
 import my.easycommunity.net.service.NewsService;
+import my.easycommunity.net.service.PhotoService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Converter;
@@ -25,6 +24,7 @@ public class Api
     private Converter.Factory factory = GsonConverterFactory.create();
     //services；
     private NewsService newsService;
+    private PhotoService photoService ;
 
     //单列
     public static  Api getInstance(){
@@ -53,18 +53,23 @@ public class Api
         //请求 超时 时间为5秒
         builder.connectTimeout(5, TimeUnit.SECONDS);
     }
-
-
-    //新闻接口
-    public  NewsService getNewsService (){
+    public <T> T getService( Class cls) {
+        String serviceName =cls.getName();
+        String url = "";
+        switch (serviceName){
+            case "my.easycommunity.net.service.NewsService":
+                url=BaseUrl.uri_news;
+                break;
+            case "my.easycommunity.net.service.PhotoService":
+                url=BaseUrl.url_photo;
+                break;
+        }
         Retrofit retrofit =new Retrofit.Builder()
                 .client(builder.build())
-                .baseUrl(BaseUrl.uri_news)
+                .baseUrl(url)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(factory)
                 .build();
-        newsService =retrofit.create(NewsService.class);
-        return  newsService;
-
+        return (T) retrofit.create(cls);
     }
 }

@@ -176,7 +176,6 @@ public class NewsFragment extends RxFragment implements NewsView,View.OnClickLis
             if( adapter !=null && adapter.getItemCount()!=0){
                 ProssBarUtil.hideBar(error_tv);
             }
-
             ToastUtil.show("请检测你的网络！");
         }
     }
