@@ -21,6 +21,7 @@ public class PhotoPresenterImpl implements PhotoPresenter ,PhotoInteractor.onCom
     List<GankPhoto.ResultsBean> listdataBeans =new ArrayList<>();
 
     private Subscription compositeSubscription ;
+
     public PhotoPresenterImpl(PohotoView pohotoView,Observable.Transformer transformer)
     {
         this.pohotoView = pohotoView;
@@ -67,12 +68,6 @@ public class PhotoPresenterImpl implements PhotoPresenter ,PhotoInteractor.onCom
     }
 
     @Override
-    public void addMore(int page)
-    {
-
-    }
-
-    @Override
     public void stopNetWork()
     {
         if(compositeSubscription!=null && !compositeSubscription.isUnsubscribed()){
@@ -84,7 +79,7 @@ public class PhotoPresenterImpl implements PhotoPresenter ,PhotoInteractor.onCom
     public void itemOnclickLinster(int position)
     {
         if(listdataBeans.get(position)!=null){
-            pohotoView.onItemClickLinster(listdataBeans.get(position));
+            pohotoView.onItemClickLinster(listdataBeans, position);
         }
     }
 

@@ -194,7 +194,6 @@ public class NewsFragment extends RxFragment implements NewsView,View.OnClickLis
         super.setUserVisibleHint(isVisibleToUser);
         if (!isVisibleToUser && isAdded())
         {
-
             newsPresenter.stopNetWork();
         }
     }

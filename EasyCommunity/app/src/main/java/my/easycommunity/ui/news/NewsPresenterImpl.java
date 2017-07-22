@@ -49,11 +49,7 @@ public class NewsPresenterImpl implements NewsPresenter,NewsInteractor.onComplet
 
     }
 
-    @Override
-    public void addMore(int pageNum)
-    {
 
-    }
 
     @Override
     public void stopNetWork()

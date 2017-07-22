@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +31,7 @@ public class PhotoFragmentAdapter extends RecyclerView.Adapter<PhotoFragmentAdap
     LayoutInflater inflaters;
     List<String> list;
     List<GankPhoto.ResultsBean> data;
+    public OnItemClickListener listener;
 
     public PhotoFragmentAdapter()
     {
@@ -57,13 +59,23 @@ public class PhotoFragmentAdapter extends RecyclerView.Adapter<PhotoFragmentAdap
     }
 
     @Override
-    public void onBindViewHolder(MyHolder holder, int position)
+    public void onBindViewHolder(MyHolder holder, final int position)
     {
         Glide.with(context)
                 .load(data.get(position).getUrl())
-                .override(150,150)
                 .centerCrop()
                 .into(holder.img);
+
+        View Parent = (View) holder.img.getParent();
+
+        Parent.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                listener.click(v,position);
+            }
+        });
     }
 
     @Override
@@ -83,5 +95,16 @@ public class PhotoFragmentAdapter extends RecyclerView.Adapter<PhotoFragmentAdap
             ButterKnife.inject(this,itemView);
 
         }
+    }
+
+    public void  setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener ;
+
+    }
+
+    public  interface  OnItemClickListener {
+
+
+        void click( View parentView ,int position);
     }
 }

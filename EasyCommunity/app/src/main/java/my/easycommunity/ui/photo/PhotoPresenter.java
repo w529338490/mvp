@@ -8,7 +8,6 @@ import my.easycommunity.BasePresenter;
 public interface PhotoPresenter  extends BasePresenter{
 
     void getDate(int  page);
-    void addMore( int page);
     void stopNetWork();
     void itemOnclickLinster(int position);
 }

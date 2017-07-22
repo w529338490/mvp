@@ -22,6 +22,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+
+import com.orhanobut.logger.Logger;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.util.ArrayList;
 import my.easycommunity.adapter.PaperAdapter;
@@ -82,11 +84,12 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             mCurTransaction = fragmetManager.beginTransaction();
             mCurTransaction.add(R.id.fragment_Container, VideoFragmet.newInstance(), "video")
                     .hide(VideoFragmet.newInstance());
-            mCurTransaction.add(R.id.fragment_Container, PhotoFragment.newInstance(),"photo")
-                    .hide(PhotoFragment.newInstance());
+            mCurTransaction.add(R.id.fragment_Container, PhotoFragment.newInstance(tab_bottom),"photo")
+                    .hide(PhotoFragment.newInstance(tab_bottom));
             mCurTransaction.add(R.id.fragment_Container, UserFrament.newInstance(),"user")
                     .hide(UserFrament.newInstance());
             mCurTransaction.commitAllowingStateLoss();
+
         }else {
             getSupportFragmentManager().beginTransaction()
                     .hide(getSupportFragmentManager().findFragmentByTag("video"))
@@ -215,13 +218,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(netWorkStateReceiver, filter);
     }
-    //onPause()方法注销
-    @Override
-    protected void onPause() {
 
-        super.onPause();
-        unregisterReceiver(netWorkStateReceiver);
-    }
     private void goneHome(){
         appBarLayout.setVisibility(View.GONE);
         pager.setVisibility(View.GONE);
@@ -268,7 +265,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             snackbar.show();
         } else
         {
-            finish();
+            System.exit(0);
         }
     }
     @Override

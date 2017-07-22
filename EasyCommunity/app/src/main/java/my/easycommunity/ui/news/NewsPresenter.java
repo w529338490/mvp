@@ -9,7 +9,6 @@ import my.easycommunity.BasePresenter;
 public interface NewsPresenter extends BasePresenter
 {
     void getDate(String type);
-    void addMore( int pageNum);
     void stopNetWork();
     void itemOnclickLinster(int position);
 }

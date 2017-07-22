@@ -68,6 +68,9 @@ public class Api
         return (T) retrofit.create(cls);
     }
 
+
+
+
     private String getBaseUrl(String serviceName)
     {
         String url = "";

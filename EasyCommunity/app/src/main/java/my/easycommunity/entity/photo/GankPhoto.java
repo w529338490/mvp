@@ -1,11 +1,13 @@
 package my.easycommunity.entity.photo;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Administrator on 2017/7/21.
  */
-public class GankPhoto {
+public class GankPhoto implements Serializable
+{
     private boolean error;
     /**
      * _id : 5971760e421aa90ca209c4af
@@ -29,7 +31,7 @@ public class GankPhoto {
 
     public void setResults(List<ResultsBean> results) { this.results = results;}
 
-    public static class ResultsBean {
+    public static class ResultsBean implements Serializable {
         private String _id;
         private String createdAt;
         private String desc;

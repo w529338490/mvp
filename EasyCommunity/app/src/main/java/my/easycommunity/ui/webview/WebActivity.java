@@ -108,7 +108,6 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
     {
         webView.loadUrl(wEvent.getUrl());
         textView.setText( wEvent.getTitttle()  );
-
     }
 
 
@@ -137,9 +136,7 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
         {
             case MotionEvent.ACTION_DOWN:
                 dy = event.getY();
-
                 break;
-
             case MotionEvent.ACTION_MOVE:
                 my = event.getY();
                 float del = my - dy;
@@ -152,7 +149,6 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
                             canHide =true;
                         }
                     }
-
                 } else
                 {
                       bottom_ll.setVisibility(View.VISIBLE);

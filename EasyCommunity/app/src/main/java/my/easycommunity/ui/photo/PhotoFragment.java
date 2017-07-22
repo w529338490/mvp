@@ -1,12 +1,16 @@
 package my.easycommunity.ui.photo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -18,8 +22,10 @@ import butterknife.InjectView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.progresslayout.ProgressLayout;
+import com.orhanobut.logger.Logger;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
+import java.io.Serializable;
 import java.util.List;
 
 import my.easycommunity.R;
@@ -40,21 +46,21 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
     private View view;
     @InjectView(R.id.recyclerView) RecyclerView recyclerView;
     @InjectView(R.id.srf) TwinklingRefreshLayout fresh;
-
     @InjectView(R.id.progress) FrameLayout progress;
     @InjectView(R.id.error_tv)TextView error_tv;
     private GridLayoutManager manager ;
     private PhotoFragmentAdapter  adapter;
-
     ProgressLayout header ;
-
     private int page=1;
 
+    public BottomNavigationView tab_bottom;
     private   PhotoPresenterImpl  plmpl;
     private boolean fistLoad =false ;
-    public static  PhotoFragment newInstance(){
+    
+    public static  PhotoFragment newInstance( BottomNavigationView tab_bottom ){
         if(instance == null){
             instance=new PhotoFragment();
+            instance.tab_bottom =tab_bottom;
         }
         return instance;
     }
@@ -66,7 +72,6 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
             view = inflater.inflate(R.layout.fragment_pohto, container, false);
             ButterKnife.inject(this,view);
         }
-
         if(getContext() !=null){
             manager =new GridLayoutManager(getContext(),2);
             recyclerView.setLayoutManager(manager);
@@ -81,8 +86,6 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
         setUpData();
         return  view;
     }
-
-
     private void setUpView()
     {
         header = new ProgressLayout(this.getContext());
@@ -90,6 +93,17 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
         fresh.setEnableOverScroll(false);
         fresh.setEnableRefresh(true);
 
+    }
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+    }
+    @Override
+    public void onResume()
+    {
+        super.onResume();
     }
     private void setUpData()
     {
@@ -122,21 +136,39 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
                 }, 2000);
             }
         });
+
+        adapter.setOnItemClickListener(new PhotoFragmentAdapter.OnItemClickListener()
+        {
+            @Override
+            public void click(View parentView, int position)
+            {
+                plmpl.itemOnclickLinster(position);
+            }
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy<=0){
+                    tab_bottom.setVisibility(View.VISIBLE);
+                }else {
+                    tab_bottom.setVisibility(View.GONE);
+                }
+
+            }
+        });
     }
 
-
-
     @Override
-    public void setData()
+    public void onItemClickLinster(List<GankPhoto.ResultsBean> photoList, int currentPosition)
     {
-
-    }
-
-    @Override
-    public void onItemClickLinster(GankPhoto.ResultsBean resultsBean)
-    {
-
-        ToastUtil.show(resultsBean.getUrl());
+        Intent intent =new Intent(this.getActivity(),PhotoDetailActivity.class );
+        intent.putExtra("photoList", (Serializable) photoList);
+        intent.putExtra("position",currentPosition);
+        startActivity(intent);
     }
 
     @Override
@@ -153,7 +185,6 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
         }else {
             page=1;
         }
-
 
     }
 
@@ -195,5 +226,25 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
             }
         }
     }
+    //离开界面时候，停止数据加载
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser)
+    {
+        Logger.e("setUserVisibleHint"+isVisibleToUser);
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser && isAdded())
+        {
+            plmpl.stopNetWork();
+        }
+    }
 
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        plmpl.unsubscribe();
+        page=1;
+
+    }
 }
