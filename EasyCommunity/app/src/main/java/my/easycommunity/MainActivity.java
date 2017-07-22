@@ -94,7 +94,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             getSupportFragmentManager().beginTransaction()
                     .hide(getSupportFragmentManager().findFragmentByTag("video"))
                     .commitAllowingStateLoss();
-
+            ((PhotoFragment)getSupportFragmentManager().findFragmentByTag("photo")).tab_bottom=tab_bottom;
             getSupportFragmentManager().beginTransaction()
                     .hide(getSupportFragmentManager().findFragmentByTag("photo"))
                     .commitAllowingStateLoss();
@@ -102,6 +102,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             getSupportFragmentManager().beginTransaction()
                     .hide(getSupportFragmentManager().findFragmentByTag("user"))
                     .commitAllowingStateLoss();
+            tab_bottom.setSelectedItemId(0);
         }
             for (int i = 0; i < mTitles.length; i++)
             {
@@ -247,6 +248,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
                         .commitAllowingStateLoss();
             }
         }
+        tab_bottom.setSelectedItemId(0);
         super.onSaveInstanceState(savedInstanceState);
     }
     @Override

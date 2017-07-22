@@ -45,7 +45,6 @@ public class PhotoPresenterImpl implements PhotoPresenter ,PhotoInteractor.onCom
     @Override
     public void onSuccess(List<GankPhoto.ResultsBean> photoList, Subscription subscription)
     {
-        pohotoView.setData(photoList);
         compositeSubscription=subscription;
         if(photoList!=null){
             listdataBeans = photoList;

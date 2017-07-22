@@ -10,6 +10,6 @@ import rx.Observable;
  */
 public interface PhotoService {
     //获取图片
-    @GET("data/福利/5/{page}")
+    @GET("data/福利/6/{page}")
     Observable<GankPhoto> getPhoto(@Path("page") int page);
 }

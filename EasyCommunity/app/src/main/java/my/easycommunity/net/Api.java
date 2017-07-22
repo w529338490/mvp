@@ -28,9 +28,7 @@ public class Api
     private NewsService newsService;
     private PhotoService photoService ;
 
-    //单列
     public static  Api getInstance(){
-
         if(instance == null){
             instance =new Api();
         }
@@ -58,7 +56,8 @@ public class Api
     }
     public <T> T getService( Class cls) {
         String serviceName =cls.getName();
-        String url = getBaseUrl(serviceName);
+        String url="";
+        url = getBaseUrl(serviceName);
         Retrofit retrofit =new Retrofit.Builder()
                 .client(builder.build())
                 .baseUrl(url)
@@ -67,10 +66,6 @@ public class Api
                 .build();
         return (T) retrofit.create(cls);
     }
-
-
-
-
     private String getBaseUrl(String serviceName)
     {
         String url = "";
@@ -81,6 +76,9 @@ public class Api
             case "my.easycommunity.net.service.PhotoService":
                 url=BaseUrl.url_photo;
                 break;
+            case "my.easycommunity.net.service.VideoSerVice":
+                url=BaseUrl.url_photo;
+            break;
         }
         return url;
     }

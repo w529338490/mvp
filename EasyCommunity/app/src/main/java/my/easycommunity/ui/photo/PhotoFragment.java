@@ -56,7 +56,7 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
     public BottomNavigationView tab_bottom;
     private   PhotoPresenterImpl  plmpl;
     private boolean fistLoad =false ;
-    
+
     public static  PhotoFragment newInstance( BottomNavigationView tab_bottom ){
         if(instance == null){
             instance=new PhotoFragment();
@@ -94,12 +94,8 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
         fresh.setEnableRefresh(true);
 
     }
-    @Override
-    public void onStart()
-    {
-        super.onStart();
 
-    }
+
     @Override
     public void onResume()
     {
@@ -152,10 +148,15 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
                 super.onScrolled(recyclerView, dx, dy);
-                if(dy<=0){
-                    tab_bottom.setVisibility(View.VISIBLE);
+                if(dy<=0 ){
+                    if(tab_bottom!=null){
+                        tab_bottom.setVisibility(View.VISIBLE);
+                    }
+
                 }else {
-                    tab_bottom.setVisibility(View.GONE);
+                    if(tab_bottom!=null){
+                        tab_bottom.setVisibility(View.GONE);
+                    }
                 }
 
             }
@@ -238,13 +239,11 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
         }
     }
 
-
     @Override
     public void onDestroy()
     {
         super.onDestroy();
         plmpl.unsubscribe();
         page=1;
-
     }
 }

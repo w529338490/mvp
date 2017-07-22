@@ -59,4 +59,6 @@ dependencies {
     compile 'com.commit451:PhotoView:1.2.4'
     //事件总线
     compile 'de.greenrobot:eventbus:2.4.0'
+
+    compile project(':jcvideoplayer-lib')
 }
