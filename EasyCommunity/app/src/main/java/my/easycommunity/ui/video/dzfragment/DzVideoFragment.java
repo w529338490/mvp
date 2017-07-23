@@ -24,8 +24,11 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import my.easycommunity.R;
+import my.easycommunity.adapter.NewsFragmentAdapter;
 import my.easycommunity.adapter.PhotoFragmentAdapter;
 import my.easycommunity.adapter.VideoViewAdapter;
+import my.easycommunity.base.BaseFragment;
+import my.easycommunity.base.BasePresenter;
 import my.easycommunity.entity.photo.GankPhoto;
 import my.easycommunity.entity.video.Video;
 import my.easycommunity.ui.news.NewsFragment;
@@ -40,139 +43,55 @@ import static my.easycommunity.R.id.fresh;
  * Created by Administrator on 2017/7/22.
  */
 
-public class DzVideoFragment extends RxFragment implements VideoView
+public class DzVideoFragment extends BaseFragment<Video.DataBean.DataBeans> implements VideoView
 {
-
-
-    @InjectView(fresh) public TwinklingRefreshLayout twinklingRefreshLayout;
-    @InjectView(R.id.news_rcv)
-    RecyclerView recyclerView;
-    @InjectView(R.id.progress)
-    FrameLayout progress;
-    @InjectView(R.id.error_tv)TextView error_tv;
     private String[] strType = new String[]{"1", "2"};
-    private static DzVideoFragment instance;
-    private View view;
     VideoViewAdapter  adapter;
     LinearLayoutManager manager;
-    ProgressLayout header ;
-
-    private boolean fistLoad =false ;
-
-    private  int page =1;
-    DzVideoPresenterImpl dzVideoPresenter;
-    public static DzVideoFragment newInstance(int type)
-    {
+    DzVideoPresenter dzVideoPresenter;
+    int type=0;
+    public static DzVideoFragment newInstance(int type) {
         DzVideoFragment newsFragment = new DzVideoFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("type", type);
         newsFragment.setArguments(bundle);
         return newsFragment;
     }
+    @Override
+    public void setData(List<Video.DataBean.DataBeans> listData) {adapter.setData(listData);}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
-        if(view ==null){
-            view = inflater.inflate(R.layout.dzvideo, container, false);
-            ButterKnife.inject(this,view);
-        }
-        dzVideoPresenter =new DzVideoPresenterImpl(this,this.bindToLifecycle());
-        if(getContext() !=null){
-            manager =new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(manager);
-        }
+    public void onItemClickLinster(Video.DataBean.DataBeans newsBean) {}
 
-        if(adapter==null && this.getContext()!=null){
-            adapter =new VideoViewAdapter(this.getContext());
+    @Override
+    public void onPause() {super.onPause();JCVideoPlayer.releaseAllVideos();}
+
+    @Override public int getContentRes() {return R.layout.news_fragment;}
+
+    @Override
+    public BasePresenter getPresenter() {
+        dzVideoPresenter =new DzVideoPresenterImpl(this.bindToLifecycle(),this,new DzVideoInteractorImpl());
+        return dzVideoPresenter;
+    }
+    @Override
+    public void setUpView() {
+        manager =new LinearLayoutManager(this.getContext());
+        error_tv.setOnClickListener(this);
+        if(adapter==null && getContext()!=null){
+            adapter =new VideoViewAdapter(getContext());
         }
+        recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
-        setUpView();
-        setUpData();
-        return view;
-    }
-
-    private void setUpView()
-    {
-        header = new ProgressLayout(this.getContext());
-        twinklingRefreshLayout.setHeaderView(header);
-        twinklingRefreshLayout.setEnableOverScroll(false);
-        twinklingRefreshLayout.setEnableRefresh(true);
-    }
-
-
-    private void setUpData()
-    {
-
-        dzVideoPresenter.start();
-        addNetData();
-        twinklingRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
-            @Override
-            public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        fistLoad=false;
-                        page=1;
-                        addNetData();
-                        refreshLayout.finishRefreshing();
-                    }
-                }, 2000);
-            }
-            @Override
-            public void onLoadMore(final TwinklingRefreshLayout refreshLayout) {
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        fistLoad=false;
-                        refreshLayout.finishLoadmore();
-                    }
-                }, 2000);
-            }
-        });
-    }
-    @Override
-    public void showProgress()
-    {
-        ProssBarUtil.showBar(progress);
     }
 
     @Override
-    public void hideProgress()
-    {
-        ProssBarUtil.hideBar(progress);
-    }
+    public void iniData() {}
 
     @Override
-    public void setData(List<Video.DataBean.DataBeans> listData)
-    {
-        adapter.setData(listData);
+    public Object gettyp() {
+        type =this.getArguments().getInt("type");
+        return strType[type];
     }
-
-
     @Override
-    public void onPause()
-    {
-        super.onPause();
-        JCVideoPlayer.releaseAllVideos();
-    }
-
-    public  void addNetData(){
-
-        if ( getContext()!=null && NetWorkUtil.networkCanUse(getContext())) {
-            ProssBarUtil.showBar(progress);
-            ProssBarUtil.hideBar(error_tv);
-            dzVideoPresenter.getDate(page);
-        } else {
-            ProssBarUtil.hideBar(progress);
-            ProssBarUtil.showBar(error_tv);
-            if( adapter !=null && adapter.getItemCount()!=0){
-                ProssBarUtil.hideBar(error_tv);
-            }
-            if(!fistLoad){
-                ToastUtil.show("请检测你的网络！");
-            }
-        }
-    }
+    public boolean adapterIsEmpty() {return adapter !=null && adapter.getItemCount()!=0;}
 }

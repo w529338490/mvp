@@ -21,31 +21,21 @@ import my.easycommunity.utill.MarqueeTextView;
 
 public class WebActivity extends AppCompatActivity implements webView,View.OnClickListener,View.OnTouchListener
 {
-    @InjectView(R.id.toolbar)
-    Toolbar toobar;
-    @InjectView(R.id.webView)
-    WebView webView;
-    @InjectView(R.id.tittle)
-    MarqueeTextView textView;
+    @InjectView(R.id.toolbar) Toolbar toobar;
+    @InjectView(R.id.webView) WebView webView;
+    @InjectView(R.id.tittle) MarqueeTextView textView;
+    @InjectView(R.id.progress) FrameLayout progress;
+    @InjectView(R.id.bottom_ll) RelativeLayout bottom_ll;
+    @InjectView(R.id.ratingbar) RatingBar ratingbar;
 
-    @InjectView(R.id.progress)
-    FrameLayout progress;
-
-    @InjectView(R.id.bottom_ll)
-    RelativeLayout bottom_ll;
-    @InjectView(R.id.ratingbar)
-    RatingBar ratingbar;
     WebViewEvent wEvent;
     private  WebPresenterImpl  webPresenter;
-
     private boolean canHide =true;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
-
         ButterKnife.inject(this);
         EventBus.getDefault().registerSticky(this);
         webPresenter =new WebPresenterImpl(this);
@@ -53,8 +43,7 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
          initView();
     }
 
-    private void initView()
-    {
+    private void initView() {
         webPresenter.checkData(wEvent);
         bottom_ll.setOnClickListener(this);
         ratingbar.setOnClickListener(this);
@@ -104,24 +93,21 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
     }
 
     @Override
-    public void showData()
-    {
+    public void showData() {
         webView.loadUrl(wEvent.getUrl());
         textView.setText( wEvent.getTitttle()  );
     }
 
-
     private float dy;
     float my;
-
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         switch (v.getId()){
 
             case R.id.ratingbar:
                 ratingbar.setMax(1);
                 break;
+
             case R.id.bottom_ll:
                 Logger.e("bottom_ll");
                 canHide=false;
@@ -159,13 +145,11 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
     }
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);//反注册EventBus
         webPresenter.unsubscribe();
         webPresenter=null;
         wEvent =null;
     }
-
 }

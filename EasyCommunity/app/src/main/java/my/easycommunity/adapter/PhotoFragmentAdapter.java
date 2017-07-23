@@ -30,7 +30,7 @@ public class PhotoFragmentAdapter extends RecyclerView.Adapter<PhotoFragmentAdap
     Context context;
     LayoutInflater inflaters;
     List<String> list;
-    List<GankPhoto.ResultsBean> data;
+    public List<GankPhoto.ResultsBean> data;
     public OnItemClickListener listener;
 
     public PhotoFragmentAdapter()
@@ -73,7 +73,7 @@ public class PhotoFragmentAdapter extends RecyclerView.Adapter<PhotoFragmentAdap
             @Override
             public void onClick(View v)
             {
-                listener.click(v,position);
+                listener.click(v,position ,data);
             }
         });
     }
@@ -105,6 +105,6 @@ public class PhotoFragmentAdapter extends RecyclerView.Adapter<PhotoFragmentAdap
     public  interface  OnItemClickListener {
 
 
-        void click( View parentView ,int position);
+        void click( View parentView ,int position ,List<GankPhoto.ResultsBean> data);
     }
 }

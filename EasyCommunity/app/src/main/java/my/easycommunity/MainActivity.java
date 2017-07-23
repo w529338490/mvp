@@ -22,8 +22,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-
-import com.orhanobut.logger.Logger;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.util.ArrayList;
 import my.easycommunity.adapter.PaperAdapter;
@@ -106,7 +104,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         }
             for (int i = 0; i < mTitles.length; i++)
             {
-                NewsFragment newsf = NewsFragment.newInstance(i,appBarLayout);
+                NewsFragment newsf = NewsFragment.newInstance(i);
                 list.add(newsf);
             }
               adapter.setList(list);

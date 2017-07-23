@@ -74,12 +74,12 @@ public class PhotoDetailActivity extends AppCompatActivity
             float   end=e2.getX();
             //向右
             if(end -start >=0){
-                count ++;
+                count +=1;
                 loadImage();
 
             }
             else if(end -start <0){
-                count --;
+                count -=1;
                 loadImage();
             }
             return super.onFling(e1, e2, velocityX, velocityY);
@@ -88,11 +88,10 @@ public class PhotoDetailActivity extends AppCompatActivity
 
     private void loadImage()
     {
-
         if(count<=0){
             count=0;
         }
-        else  if(count >+photoList.size()){
+        else  if(count >=photoList.size()){
             count=photoList.size()-1;
         }
        ProssBarUtil.showBar(progress);

@@ -11,11 +11,5 @@ import rx.Subscription;
 
 public interface NewsInteractor
 {
-    interface  onCompletedLinster{
-        void onError();
-        void onSuccess(List<Result.ResultBean.DataBean> list , Subscription subscription);
-
-    }
-    void getData(String type, Observable.Transformer  transformer);
 
 }

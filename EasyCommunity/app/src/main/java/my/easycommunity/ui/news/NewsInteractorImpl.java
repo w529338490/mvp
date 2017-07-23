@@ -1,6 +1,8 @@
 package my.easycommunity.ui.news;
 
 import com.orhanobut.logger.Logger;
+
+import my.easycommunity.base.BaseInteractorImpl;
 import my.easycommunity.entity.news.Result;
 import my.easycommunity.net.Api;
 import my.easycommunity.net.service.NewsService;
@@ -14,21 +16,8 @@ import rx.schedulers.Schedulers;
  * Created by Administrator on 2017/7/16.
  */
 
-public class NewsInteractorImpl implements NewsInteractor
+public class NewsInteractorImpl extends BaseInteractorImpl<Result.ResultBean.DataBean> implements NewsInteractor
 {
-
-    public Subscription compositeSubscription;
-    private onCompletedLinster linster ;
-
-    public NewsInteractorImpl(onCompletedLinster linster) {
-        this.linster = linster;
-    }
-
-    @Override
-    public  void  getData(String type, Observable.Transformer transformer)
-    {
-         netData(type, transformer);
-    }
 
     private void netData(String type, Observable.Transformer transformer)
     {
@@ -45,11 +34,10 @@ public class NewsInteractorImpl implements NewsInteractor
                     {
                         if (result.getError_code() ==0 &&result.getResult() !=null)
                         {
-                            linster.onSuccess(result.getResult().getData() ,compositeSubscription);
+                            linster.onSuccess(result.getResult().getData(),compositeSubscription);
                         }else {
                             linster.onError();
                         }
-
                     }
                 }, new Action1<Throwable>()
                 {
@@ -62,4 +50,9 @@ public class NewsInteractorImpl implements NewsInteractor
                 });
     }
 
+    @Override
+    public void getData(Object type, Observable.Transformer transformer)
+    {
+        netData((String) type,transformer);
+    }
 }

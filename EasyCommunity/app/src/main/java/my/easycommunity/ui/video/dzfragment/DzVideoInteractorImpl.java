@@ -5,6 +5,7 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.easycommunity.base.BaseInteractorImpl;
 import my.easycommunity.entity.news.Result;
 import my.easycommunity.entity.photo.GankPhoto;
 import my.easycommunity.entity.video.Video;
@@ -21,21 +22,8 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Administrator on 2017/7/18.
  */
-public class DzVideoInteractorImpl implements DzVideoInteractor
+public class DzVideoInteractorImpl  extends BaseInteractorImpl implements DzVideoInteractor
 {
-    DzVideoInteractor.onCompletedLinster linster;
-    private Subscription compositeSubscription;
-    List<Video.DataBean.DataBeans> listData = new ArrayList();
-
-    public DzVideoInteractorImpl(DzVideoInteractor.onCompletedLinster linster)
-    {
-        this.linster = linster;
-    }
-    @Override
-    public void getData(int page, Observable.Transformer transformer)
-    {
-           getNetWorkData(transformer);
-    }
 
     private void getNetWorkData(Observable.Transformer transformer)
     {
@@ -52,8 +40,7 @@ public class DzVideoInteractorImpl implements DzVideoInteractor
                     {
                         if (result.getMessage().equals("success"))
                         {
-                            listData = result.data.data;
-                            linster.onSuccess(listData, compositeSubscription);
+                            linster.onSuccess(result.data.data, compositeSubscription);
                         } else
                         {
                             linster.onError();
@@ -70,4 +57,9 @@ public class DzVideoInteractorImpl implements DzVideoInteractor
                 });
     }
 
+    @Override
+    public void getData(Object type, Observable.Transformer transformer)
+    {
+        getNetWorkData(transformer);
+    }
 }

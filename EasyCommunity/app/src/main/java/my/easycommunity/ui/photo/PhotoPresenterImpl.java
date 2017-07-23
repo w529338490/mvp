@@ -5,6 +5,9 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.easycommunity.base.BaseInteractorImpl;
+import my.easycommunity.base.BasePresenterImpl;
+import my.easycommunity.base.BaseView;
 import my.easycommunity.entity.news.Result;
 import my.easycommunity.entity.photo.GankPhoto;
 import rx.Observable;
@@ -13,78 +16,25 @@ import rx.Subscription;
 /**
  * Created by Administrator on 2017/7/18.
  */
-public class PhotoPresenterImpl implements PhotoPresenter ,PhotoInteractor.onCompletedLinster{
+public class PhotoPresenterImpl extends BasePresenterImpl<GankPhoto.ResultsBean> implements PhotoPresenter ,PhotoInteractor{
 
-    PhotoInteractorImpl photoInteractor;
+    PhotoInteractor photoInteractor;
     PohotoView pohotoView ;
     Observable.Transformer transformer;
-    List<GankPhoto.ResultsBean> listdataBeans =new ArrayList<>();
 
-    private Subscription compositeSubscription ;
-
-    public PhotoPresenterImpl(PohotoView pohotoView,Observable.Transformer transformer)
+    public PhotoPresenterImpl(Observable.Transformer transformer, PohotoView pohotoView, PhotoInteractorImpl photoInteractor)
     {
-        this.pohotoView = pohotoView;
-        photoInteractor =new PhotoInteractorImpl(this);
-        this.transformer =transformer ;
-    }
-
-
-    @Override
-    public void start()
-    {
-        pohotoView.showProgress();
+        super(transformer, pohotoView, photoInteractor);
+        this.transformer =transformer;
+        this.pohotoView=pohotoView;
+        this.photoInteractor =photoInteractor;
     }
 
     @Override
-    public void onError()
+    public void onItemClickLinster(List<GankPhoto.ResultsBean> photoList, int currentPosition)
     {
-        pohotoView.hideProgress();
-    }
-
-    @Override
-    public void onSuccess(List<GankPhoto.ResultsBean> photoList, Subscription subscription)
-    {
-        compositeSubscription=subscription;
-        if(photoList!=null){
-            listdataBeans = photoList;
-            pohotoView.hideProgress();
-            pohotoView.setData(photoList);
+        if(listdataBeans!=null){
+            pohotoView.onItemClickLinster(photoList ,currentPosition);
         }
-    }
-
-    @Override
-    public void onAddMoreError()
-    {
-
-        pohotoView.addMoreErroe();
-    }
-
-    @Override
-    public void getDate(int page)
-    {
-        photoInteractor.getData(page,transformer);
-    }
-
-    @Override
-    public void stopNetWork()
-    {
-        if(compositeSubscription!=null && !compositeSubscription.isUnsubscribed()){
-            compositeSubscription.unsubscribe();
-        }
-    }
-
-    @Override
-    public void itemOnclickLinster(int position)
-    {
-        if(listdataBeans.get(position)!=null){
-            pohotoView.onItemClickLinster(listdataBeans, position);
-        }
-    }
-
-    @Override
-    public void unsubscribe()
-    {
-        stopNetWork();
     }
 }

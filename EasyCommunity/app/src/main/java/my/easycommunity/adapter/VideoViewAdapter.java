@@ -111,7 +111,6 @@ public class VideoViewAdapter extends RecyclerView.Adapter<VideoViewAdapter.Hold
         public Holder(View view)
         {
             super(view);
-
             ButterKnife.inject(this,view);
             tittle = (TextView) view.findViewById(R.id.tittle);
             saved = (TextView) view.findViewById(R.id.saved);

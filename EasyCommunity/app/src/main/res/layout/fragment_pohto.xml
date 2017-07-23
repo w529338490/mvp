@@ -5,7 +5,7 @@
               android:layout_height="match_parent">
 
     <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
-        android:id="@+id/srf"
+        android:id="@+id/fresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible">
@@ -15,8 +15,6 @@
             android:layout_height="match_parent"
             android:overScrollMode="never"
             />
-
-
     <FrameLayout
         android:id="@+id/progress"
         android:layout_width="match_parent"

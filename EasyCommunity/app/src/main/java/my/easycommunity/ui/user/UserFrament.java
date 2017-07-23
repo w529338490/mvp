@@ -6,12 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.trello.rxlifecycle.components.support.RxFragment;
+
+import java.util.List;
+
 import my.easycommunity.R;
+import my.easycommunity.base.BaseFragment;
+import my.easycommunity.base.BasePresenter;
 
 /**
  * Created by Administrator on 2017/7/17.
  */
-public class UserFrament extends RxFragment {
+public class UserFrament extends BaseFragment implements UserView
+{
     private View view;
 
     private static UserFrament instance;
@@ -22,15 +28,52 @@ public class UserFrament extends RxFragment {
         }
         return instance;
     }
-    @Nullable
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+    public int getContentRes()
+    {
+        return 0;
+    }
 
-        if(view==null){
-            view =inflater.inflate(R.layout.fragment_user,container,false);
+    @Override
+    public BasePresenter getPresenter()
+    {
+        return null;
+    }
 
-        }
-        return view;
+    @Override
+    public void setUpView()
+    {
+
+    }
+
+    @Override
+    public void iniData()
+    {
+
+    }
+
+    @Override
+    public Object gettyp()
+    {
+        return null;
+    }
+
+    @Override
+    public boolean adapterIsEmpty()
+    {
+        return false;
+    }
+
+    @Override
+    public void setData(List list)
+    {
+
+    }
+
+    @Override
+    public void onItemClickLinster(Object newsBean)
+    {
+
     }
 }

@@ -5,6 +5,7 @@ import com.orhanobut.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.easycommunity.base.BaseInteractorImpl;
 import my.easycommunity.entity.photo.GankPhoto;
 import my.easycommunity.net.Api;
 import my.easycommunity.net.service.PhotoService;
@@ -15,23 +16,17 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+import static android.R.id.list;
+
 /**
  * Created by Administrator on 2017/7/18.
  */
-public class PhotoInteractorImpl implements PhotoInteractor {
-    onCompletedLinster linster;
-    private Subscription compositeSubscription;
-    private List<GankPhoto.ResultsBean> list = new ArrayList<>();
-
-    public PhotoInteractorImpl(onCompletedLinster linster)
-    {
-        this.linster = linster;
-    }
-
+public class PhotoInteractorImpl extends BaseInteractorImpl<GankPhoto.ResultsBean> implements PhotoInteractor {
+    List<GankPhoto.ResultsBean>list ;
     @Override
-    public void getData(int page,Observable.Transformer transformer)
+    public void getData(Object type, Observable.Transformer transformer)
     {
-        netData( page,transformer );
+        netData( (int)type,transformer );
     }
 
     private void netData(final int page , final Observable.Transformer transformer)
@@ -95,4 +90,6 @@ public class PhotoInteractorImpl implements PhotoInteractor {
 
 
     }
+
+
 }

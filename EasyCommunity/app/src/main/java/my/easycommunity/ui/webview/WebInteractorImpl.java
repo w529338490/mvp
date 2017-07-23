@@ -10,24 +10,18 @@ import com.orhanobut.logger.Logger;
 
 public class WebInteractorImpl  implements  WebInteractor
 {
-
     private onCompletedLinster linster ;
-
     public WebInteractorImpl(onCompletedLinster linster)
     {
         this.linster = linster;
     }
 
     @Override
-    public void checkData(String url, String tittle)
-    {
+    public void checkData(String url, String tittle) {
         if(!TextUtils.isEmpty(url) && !TextUtils.isEmpty(tittle)){
             linster.onSuccess();
-
         }else {
             linster.onError();
-
         }
-
     }
 }

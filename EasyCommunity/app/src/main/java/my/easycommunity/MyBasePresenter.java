@@ -16,10 +16,9 @@
 
 package my.easycommunity;
 
-public interface BaseView {
-
-    void showProgress();
-
-    void hideProgress();
+public interface MyBasePresenter
+{
+    void start();
+    void unsubscribe();
 
 }

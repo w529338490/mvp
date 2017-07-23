@@ -13,11 +13,4 @@ import rx.Subscription;
 public interface DzVideoInteractor
 {
 
-    interface  onCompletedLinster{
-        void onError();
-        void onSuccess(List<Video.DataBean.DataBeans> listData , Subscription subscription);
-
-
-    }
-    void getData(int page, Observable.Transformer  transformer);
 }

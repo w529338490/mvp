@@ -14,7 +14,6 @@ public class WebPresenterImpl implements webPresenter,WebInteractor.onCompletedL
     WebInteractorImpl webInteractor ;
     WebViewEvent event ;
 
-
     public WebPresenterImpl(my.easycommunity.ui.webview.webView webView)
     {
         this.webView = webView;
@@ -29,16 +28,13 @@ public class WebPresenterImpl implements webPresenter,WebInteractor.onCompletedL
     }
 
     @Override
-    public void onError()
-    {
+    public void onError() {
 
     }
     @Override
-    public void onSuccess()
-    {
+    public void onSuccess() {
         webView.showData();
         webView.hideProgress();
-
     }
 
     @Override

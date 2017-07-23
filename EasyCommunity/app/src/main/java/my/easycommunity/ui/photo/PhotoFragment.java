@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,8 +32,12 @@ import java.util.List;
 import my.easycommunity.R;
 import my.easycommunity.adapter.NewsFragmentAdapter;
 import my.easycommunity.adapter.PhotoFragmentAdapter;
+import my.easycommunity.base.BaseFragment;
+import my.easycommunity.base.BasePresenter;
 import my.easycommunity.entity.photo.GankPhoto;
 import my.easycommunity.ui.news.NewsFragment;
+import my.easycommunity.ui.news.NewsInteractorImpl;
+import my.easycommunity.ui.news.NewsPresenterImpl;
 import my.easycommunity.utill.NetWorkUtil;
 import my.easycommunity.utill.ProssBarUtil;
 import my.easycommunity.utill.ToastUtil;
@@ -40,22 +45,13 @@ import my.easycommunity.utill.ToastUtil;
 /**
  * Created by Administrator on 2017/7/17.
  */
-public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClickListener{
+public class PhotoFragment extends BaseFragment<GankPhoto.ResultsBean> implements PohotoView {
 
     private static PhotoFragment instance;
-    private View view;
-    @InjectView(R.id.recyclerView) RecyclerView recyclerView;
-    @InjectView(R.id.srf) TwinklingRefreshLayout fresh;
-    @InjectView(R.id.progress) FrameLayout progress;
-    @InjectView(R.id.error_tv)TextView error_tv;
     private GridLayoutManager manager ;
     private PhotoFragmentAdapter  adapter;
-    ProgressLayout header ;
-    private int page=1;
-
     public BottomNavigationView tab_bottom;
-    private   PhotoPresenterImpl  plmpl;
-    private boolean fistLoad =false ;
+    private   PhotoPresenter  photoPresenter;
 
     public static  PhotoFragment newInstance( BottomNavigationView tab_bottom ){
         if(instance == null){
@@ -64,81 +60,48 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
         }
         return instance;
     }
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
-        if(view==null) {
-            view = inflater.inflate(R.layout.fragment_pohto, container, false);
-            ButterKnife.inject(this,view);
-        }
-        if(getContext() !=null){
-            manager =new GridLayoutManager(getContext(),2);
-            recyclerView.setLayoutManager(manager);
-        }
 
-        if(adapter==null){
-            adapter =new PhotoFragmentAdapter();
+    @Override
+    public void onItemClickLinster(List<GankPhoto.ResultsBean> photoList, int currentPosition)
+    {
+        Intent intent =new Intent(this.getActivity(),PhotoDetailActivity.class );
+        intent.putExtra("photoList", (Serializable) photoList);
+        intent.putExtra("position",currentPosition);
+        startActivity(intent);
+    }
+
+    @Override
+    public int getContentRes() {
+        return R.layout.news_fragment;
+    }
+
+    @Override
+    public BasePresenter getPresenter()
+    {
+        if(photoPresenter ==null){
+            photoPresenter =new PhotoPresenterImpl(this.bindToLifecycle(),this,new PhotoInteractorImpl());
         }
+        return photoPresenter;
+    }
+
+    @Override
+    public void setUpView() {
+        if(getContext()!=null){manager =new GridLayoutManager(getContext(),2);}
+        error_tv.setOnClickListener(this);
+        if(adapter==null){adapter =new PhotoFragmentAdapter();}
+        recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
-        plmpl =new PhotoPresenterImpl(this,this.bindToLifecycle());
-        setUpView();
-        setUpData();
-        return  view;
     }
-    private void setUpView()
-    {
-        header = new ProgressLayout(this.getContext());
-        fresh.setHeaderView(header);
-        fresh.setEnableOverScroll(false);
-        fresh.setEnableRefresh(true);
-
-    }
-
 
     @Override
-    public void onResume()
+    public void iniData()
     {
-        super.onResume();
-    }
-    private void setUpData()
-    {
-        plmpl.start();
-        addNetData();
-        fresh.setOnRefreshListener(new RefreshListenerAdapter() {
-            @Override
-            public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        fistLoad=false;
-                        page=1;
-                        addNetData();
-                        refreshLayout.finishRefreshing();
-                    }
-                }, 2000);
-            }
-            @Override
-            public void onLoadMore(final TwinklingRefreshLayout refreshLayout) {
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        fistLoad=false;
-                        page ++;
-                        addNetData();
-                        refreshLayout.finishLoadmore();
-                    }
-                }, 2000);
-            }
-        });
-
         adapter.setOnItemClickListener(new PhotoFragmentAdapter.OnItemClickListener()
         {
             @Override
-            public void click(View parentView, int position)
+            public void click(View parentView, int position ,List<GankPhoto.ResultsBean> data)
             {
-                plmpl.itemOnclickLinster(position);
+                 photoPresenter.onItemClickLinster(data,position);
             }
         });
 
@@ -152,98 +115,38 @@ public class PhotoFragment extends RxFragment implements PohotoView ,View.OnClic
                     if(tab_bottom!=null){
                         tab_bottom.setVisibility(View.VISIBLE);
                     }
-
                 }else {
                     if(tab_bottom!=null){
                         tab_bottom.setVisibility(View.GONE);
                     }
                 }
-
             }
         });
     }
 
     @Override
-    public void onItemClickLinster(List<GankPhoto.ResultsBean> photoList, int currentPosition)
-    {
-        Intent intent =new Intent(this.getActivity(),PhotoDetailActivity.class );
-        intent.putExtra("photoList", (Serializable) photoList);
-        intent.putExtra("position",currentPosition);
-        startActivity(intent);
-    }
+    public Object gettyp(){ return page;}
 
     @Override
-    public void setData(List<GankPhoto.ResultsBean> photoList)
-    {
-        adapter.setData(photoList);
-    }
+    public boolean adapterIsEmpty() {return adapter !=null && adapter.getItemCount()!=0;}
 
     @Override
-    public void addMoreErroe()
-    {
-        if(page>1){
-            page --;
-        }else {
-            page=1;
-        }
-
-    }
+    public void setData(List<GankPhoto.ResultsBean> list) {adapter.setData(list);}
 
     @Override
-    public void showProgress()
-    {
-        ProssBarUtil.showBar(progress);
-    }
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.error_tv:
-                fistLoad =false;
-                addNetData();
-                break;
-        }
-    }
-    @Override
-    public void hideProgress()
-    {
-        ProssBarUtil.hideBar(progress);
-        ProssBarUtil.hideBar(error_tv);
-
-    }
-    public  void addNetData(){
-
-        if ( getContext()!=null && NetWorkUtil.networkCanUse(getContext())) {
-            ProssBarUtil.showBar(progress);
-            ProssBarUtil.hideBar(error_tv);
-            plmpl.getDate(page);
-        } else {
-            ProssBarUtil.hideBar(progress);
-            ProssBarUtil.showBar(error_tv);
-            if( adapter !=null && adapter.getItemCount()!=0){
-                ProssBarUtil.hideBar(error_tv);
-            }
-            if(!fistLoad){
-                ToastUtil.show("请检测你的网络！");
-            }
-        }
-    }
-    //离开界面时候，停止数据加载
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser)
-    {
-        Logger.e("setUserVisibleHint"+isVisibleToUser);
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!isVisibleToUser && isAdded())
-        {
-            plmpl.stopNetWork();
-        }
+    public void onItemClickLinster(GankPhoto.ResultsBean newsBean) {
     }
 
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        plmpl.unsubscribe();
-        page=1;
-    }
+//    //离开界面时候，停止数据加载
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser)
+//    {
+//        Logger.e("setUserVisibleHint"+isVisibleToUser);
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (!isVisibleToUser && isAdded())
+//        {
+//            plmpl.stopNetWork();
+//        }
+//    }
+
 }
