@@ -7,7 +7,6 @@ import my.easycommunity.entity.news.Result;
 import my.easycommunity.net.Api;
 import my.easycommunity.net.service.NewsService;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;

@@ -1,7 +1,5 @@
 package my.easycommunity.ui.news;
 
-import java.util.List;
-
 import my.easycommunity.base.BaseView;
 import my.easycommunity.entity.news.Result;
 

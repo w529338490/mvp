@@ -2,6 +2,8 @@ package my.easycommunity.entity.news;
 
 import java.util.List;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Administrator on 2017/7/15.
  */

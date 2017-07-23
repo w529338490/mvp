@@ -1,15 +1,9 @@
 package my.easycommunity.ui.news;
 
-import com.orhanobut.logger.Logger;
-import java.util.ArrayList;
-import java.util.List;
-
-import my.easycommunity.base.BaseInteractorImpl;
 import my.easycommunity.base.BasePresenterImpl;
-import my.easycommunity.base.BaseView;
 import my.easycommunity.entity.news.Result;
 import rx.Observable;
-import rx.Subscription;
+
 
 /**
  * Created by Administrator on 2017/7/16.

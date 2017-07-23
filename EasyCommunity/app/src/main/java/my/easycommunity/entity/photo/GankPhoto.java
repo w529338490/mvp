@@ -3,6 +3,8 @@ package my.easycommunity.entity.photo;
 import java.io.Serializable;
 import java.util.List;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Administrator on 2017/7/21.
  */

@@ -10,19 +10,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.orhanobut.logger.Logger;
+
 import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmQuery;
 import my.easycommunity.R;
+import my.easycommunity.db.photo.PhotoSave;
 import my.easycommunity.entity.photo.GankPhoto;
 import my.easycommunity.utill.DownLoadUtil;
 import my.easycommunity.utill.ProssBarUtil;
-import my.easycommunity.utill.ToastUtil;
+
 
 public class PhotoDetailActivity extends AppCompatActivity
 {
@@ -76,7 +81,6 @@ public class PhotoDetailActivity extends AppCompatActivity
             if(end -start >=0){
                 count +=1;
                 loadImage();
-
             }
             else if(end -start <0){
                 count -=1;
@@ -95,12 +99,9 @@ public class PhotoDetailActivity extends AppCompatActivity
             count=photoList.size()-1;
         }
        ProssBarUtil.showBar(progress);
-          Glide.with(this)
-                    .load(photoList.get(count).getUrl())
-                    .asBitmap() //必须
-                    .centerCrop()
-                    .diskCacheStrategy( DiskCacheStrategy.NONE )
-                    .into(new SimpleTarget<Bitmap>()
+          Glide.with(this).load(photoList.get(count).getUrl()).asBitmap().centerCrop()
+                  .diskCacheStrategy( DiskCacheStrategy.NONE )
+                  .into(new SimpleTarget<Bitmap>()
                     {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation)

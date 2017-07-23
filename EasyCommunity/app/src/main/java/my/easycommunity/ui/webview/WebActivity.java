@@ -15,7 +15,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.orhanobut.logger.Logger;
 import de.greenrobot.event.EventBus;
+import io.realm.Realm;
 import my.easycommunity.R;
+import my.easycommunity.db.photo.PhotoSave;
 import my.easycommunity.eventbus.WebViewEvent;
 import my.easycommunity.utill.MarqueeTextView;
 
@@ -111,6 +113,11 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
             case R.id.bottom_ll:
                 Logger.e("bottom_ll");
                 canHide=false;
+
+                class user {
+                    String name;
+                    int aget;
+                }
                 break;
         }
     }
