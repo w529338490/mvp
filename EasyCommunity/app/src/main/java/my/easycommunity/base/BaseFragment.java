@@ -114,8 +114,10 @@ public abstract class BaseFragment<T> extends RxFragment implements BaseView<T>,
     @Override
     public void hideProgress()
     {
+
         ProssBarUtil.hideBar(progress);
         ProssBarUtil.hideBar(error_tv);
+        ProssBarUtil.showBar(recyclerView);
     }
 
     @Override
@@ -123,6 +125,7 @@ public abstract class BaseFragment<T> extends RxFragment implements BaseView<T>,
     {
         ProssBarUtil.hideBar(progress);
         ProssBarUtil.showBar(error_tv);
+        ProssBarUtil.hideBar(recyclerView);
     }
 
     @Override

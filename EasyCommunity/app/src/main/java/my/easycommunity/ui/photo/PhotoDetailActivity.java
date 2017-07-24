@@ -14,20 +14,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.orhanobut.logger.Logger;
-
 import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmQuery;
 import my.easycommunity.R;
-import my.easycommunity.db.photo.PhotoSave;
+
 import my.easycommunity.entity.photo.GankPhoto;
 import my.easycommunity.utill.DownLoadUtil;
 import my.easycommunity.utill.ProssBarUtil;
-
 
 public class PhotoDetailActivity extends AppCompatActivity
 {

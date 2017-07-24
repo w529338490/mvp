@@ -271,7 +271,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(netWorkStateReceiver);
+        if(netWorkStateReceiver!= null && netWorkStateReceiver.isOrderedBroadcast()){
+            unregisterReceiver(netWorkStateReceiver);
+        }
     }
-
 }

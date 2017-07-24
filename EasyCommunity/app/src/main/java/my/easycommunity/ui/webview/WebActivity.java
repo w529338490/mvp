@@ -14,15 +14,22 @@ import android.widget.RelativeLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.orhanobut.logger.Logger;
+
+import org.greenrobot.greendao.query.QueryBuilder;
+
 import de.greenrobot.event.EventBus;
-import io.realm.Realm;
 import my.easycommunity.R;
-import my.easycommunity.db.photo.PhotoSave;
+import my.easycommunity.common.MyApplication;
+import my.easycommunity.db.gen.UserDao;
+import my.easycommunity.db.gen.dbTable.User;
 import my.easycommunity.eventbus.WebViewEvent;
 import my.easycommunity.utill.MarqueeTextView;
+import my.easycommunity.utill.ToastUtil;
 
 public class WebActivity extends AppCompatActivity implements webView,View.OnClickListener,View.OnTouchListener
 {
+
+    UserDao userDao;
     @InjectView(R.id.toolbar) Toolbar toobar;
     @InjectView(R.id.webView) WebView webView;
     @InjectView(R.id.tittle) MarqueeTextView textView;
@@ -113,6 +120,18 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
             case R.id.bottom_ll:
                 Logger.e("bottom_ll");
                 canHide=false;
+                User user =new User();
+                user.name ="aaa";
+                user.pwd=0;
+                userDao = MyApplication.getDaoSession().getUserDao();
+              Long a=  userDao.insert(user);
+
+                if(a==1){
+                    ToastUtil.show("add Success");
+                }else {
+                    ToastUtil.show("add Bad");
+                }
+                Logger.e( "======================"+userDao.loadAll().size());
 
                 class user {
                     String name;

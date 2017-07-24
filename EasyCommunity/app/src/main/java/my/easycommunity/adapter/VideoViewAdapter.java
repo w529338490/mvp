@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jakewharton.rxbinding.view.RxView;
-import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import butterknife.ButterKnife;
@@ -70,8 +72,11 @@ public class VideoViewAdapter extends RecyclerView.Adapter<VideoViewAdapter.Hold
                 );
 
                 if(!TextUtils.isEmpty(thunbUrl)){
-                    Picasso.with(context)
+                    Glide.with(context)
                             .load(String.valueOf(thunbUrl))
+                            .override(150,150)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .centerCrop()
                             .into(holder.custom_videoplayer.thumbImageView);
                 }
             }
@@ -107,7 +112,6 @@ public class VideoViewAdapter extends RecyclerView.Adapter<VideoViewAdapter.Hold
         JCVideoPlayerStandard custom_videoplayer;
         TextView saved ;
         TextView img_share ;
-
         public Holder(View view)
         {
             super(view);

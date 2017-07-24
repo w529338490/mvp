@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
+apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -17,18 +17,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    /*针对greenDao的一些配置*/
+    greendao {
+        schemaVersion 1 //数据库版本号
+        daoPackage 'my.easycommunity.db.gen' //自动生成的工具类的包名
+        targetGenDir 'src/main/java' //路径
+    }
+
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:25.3.1'
-
     compile 'com.android.support:design:25.3.1'
-
     compile 'com.android.support:cardview-v7:25.3.1'
     /*上拉加载下拉刷新控件*/
     compile 'com.lcodecorex:tkrefreshlayout:1.0.5'
@@ -42,15 +47,12 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
-
     //Rxjava + RxAndroid +rxlifecycle
     compile 'com.trello:rxlifecycle:0.4.0'
     compile 'com.trello:rxlifecycle-components:0.4.0'
-
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'io.reactivex:rxjava:1.0.16'
     //图片加载
-    compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     //日志
     compile 'com.orhanobut:logger:1.15'
@@ -59,6 +61,6 @@ dependencies {
     compile 'com.commit451:PhotoView:1.2.4'
     //事件总线
     compile 'de.greenrobot:eventbus:2.4.0'
-
     compile project(':jcvideoplayer-lib')
+    compile 'org.greenrobot:greendao:3.2.2'
 }

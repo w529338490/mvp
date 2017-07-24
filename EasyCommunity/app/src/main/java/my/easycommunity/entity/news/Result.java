@@ -2,15 +2,12 @@ package my.easycommunity.entity.news;
 
 import java.util.List;
 
-import io.realm.RealmObject;
-
-/**
+/*
  * Created by Administrator on 2017/7/15.
  */
 
 public class Result
 {
-
     private String reason;
     private ResultBean result;
     private int error_code;
