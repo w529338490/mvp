@@ -236,15 +236,16 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     }
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        //不保存 非新闻页面的Fragment
+        //不保存，新闻页面的Fragment
       //  不保存，界面以及fragment，fragmetManager信息，以便在 内存不足等极端情况下重启时候，重新构建项目
+        FragmentTransaction transaction=  getSupportFragmentManager().beginTransaction();
         if(fromSavedInstanceState){
             for(int i =3 ; i<getSupportFragmentManager().getFragments().size();i++){
-                getSupportFragmentManager().beginTransaction()
-                        .remove(getSupportFragmentManager()
-                                .getFragments().get(i))
-                        .commitAllowingStateLoss();
+
+                transaction.remove(getSupportFragmentManager()
+                                .getFragments().get(i));
             }
+            transaction.commitAllowingStateLoss();
         }
         tab_bottom.setSelectedItemId(0);
         super.onSaveInstanceState(savedInstanceState);

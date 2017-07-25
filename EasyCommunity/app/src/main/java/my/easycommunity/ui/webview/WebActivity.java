@@ -19,6 +19,7 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import de.greenrobot.event.EventBus;
 import my.easycommunity.R;
+import my.easycommunity.base.BaseDao;
 import my.easycommunity.common.MyApplication;
 import my.easycommunity.db.gen.UserDao;
 import my.easycommunity.db.gen.dbTable.User;
@@ -118,25 +119,12 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
                 break;
 
             case R.id.bottom_ll:
-                Logger.e("bottom_ll");
                 canHide=false;
                 User user =new User();
                 user.name ="aaa";
                 user.pwd=0;
-                userDao = MyApplication.getDaoSession().getUserDao();
-              Long a=  userDao.insert(user);
 
-                if(a==1){
-                    ToastUtil.show("add Success");
-                }else {
-                    ToastUtil.show("add Bad");
-                }
-                Logger.e( "======================"+userDao.loadAll().size());
-
-                class user {
-                    String name;
-                    int aget;
-                }
+                BaseDao<User> userd=new BaseDao<User>();
                 break;
         }
     }
