@@ -63,4 +63,7 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0'
     compile project(':jcvideoplayer-lib')
     compile 'org.greenrobot:greendao:3.2.2'
+
+    //友盟推送
+    compile project(':PushSDK')
 }

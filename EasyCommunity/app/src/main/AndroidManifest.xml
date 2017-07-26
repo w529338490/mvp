@@ -32,6 +32,15 @@
         </activity>
         <activity android:name=".ui.photo.PhotoDetailActivity">
         </activity>
+
+        <!-- 友盟配置-->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="59789be6f43e486211000932" />
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="c027e961d28e0c7fa765e69b754ae3cf" />
+
     </application>
 
 </manifest>
