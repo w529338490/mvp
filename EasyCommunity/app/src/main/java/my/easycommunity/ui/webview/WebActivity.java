@@ -13,31 +13,19 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.orhanobut.logger.Logger;
-
-import org.greenrobot.greendao.query.QueryBuilder;
-
 import de.greenrobot.event.EventBus;
 import my.easycommunity.R;
-import my.easycommunity.base.BaseDao;
-import my.easycommunity.common.MyApplication;
-import my.easycommunity.db.gen.UserDao;
-import my.easycommunity.db.gen.dbTable.User;
 import my.easycommunity.eventbus.WebViewEvent;
 import my.easycommunity.utill.MarqueeTextView;
-import my.easycommunity.utill.ToastUtil;
 
 public class WebActivity extends AppCompatActivity implements webView,View.OnClickListener,View.OnTouchListener
 {
-
-    UserDao userDao;
     @InjectView(R.id.toolbar) Toolbar toobar;
     @InjectView(R.id.webView) WebView webView;
     @InjectView(R.id.tittle) MarqueeTextView textView;
     @InjectView(R.id.progress) FrameLayout progress;
     @InjectView(R.id.bottom_ll) RelativeLayout bottom_ll;
     @InjectView(R.id.ratingbar) RatingBar ratingbar;
-
     WebViewEvent wEvent;
     private  WebPresenterImpl  webPresenter;
     private boolean canHide =true;
@@ -120,11 +108,6 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
 
             case R.id.bottom_ll:
                 canHide=false;
-                User user =new User();
-                user.name ="aaa";
-                user.pwd=0;
-
-                BaseDao<User> userd=new BaseDao<User>();
                 break;
         }
     }
@@ -151,7 +134,7 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
                     }
                 } else
                 {
-                      bottom_ll.setVisibility(View.VISIBLE);
+                    bottom_ll.setVisibility(View.VISIBLE);
                 }
                 break;
         }

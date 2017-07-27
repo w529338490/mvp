@@ -1,28 +1,22 @@
-package my.easycommunity.base;
+package my.easycommunity.common;
 
 import com.orhanobut.logger.Logger;
-
-import org.greenrobot.greendao.Property;
-import org.greenrobot.greendao.query.QueryBuilder;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import my.easycommunity.common.MyApplication;
 import my.easycommunity.db.gen.DaoMaster;
 import my.easycommunity.db.gen.DaoSession;
-import my.easycommunity.db.gen.UserDao;
 
 /**
  * Created by Administrator on 2017/7/25.
+ * 数据库控制类，封装 对数据库的部分 增， 删， 改， 查方法，方便调用；
  */
 
-public class BaseDao<T>
+public class DaoController<T>
 {
 
     private   DaoSession daoSession;
     private   DaoMaster.DevOpenHelper helper ;
-    public BaseDao()
+    public DaoController()
     {
         daoSession = MyApplication.getDaoSession();
         helper=MyApplication.getHelper();
@@ -66,9 +60,6 @@ public class BaseDao<T>
             flag = true;
         } catch (Exception e) {
             Logger.e(e.toString());
-
-        }finally {
-//            manager.CloseDataBase();
         }
         return flag;
     }
@@ -115,19 +106,22 @@ public class BaseDao<T>
 
     /**
      * 查询某个对象是否存在
-     * @param
-     * @return
+     * @param object  所调用的 表 名
+     * @param type    表的属性 （eg：User表中的 姓名 name 属性）
+     * @param params   查询的条件，类型需要匹配 type，
+     * @return   true　表中存在 params 的 一条或者多条数据， false表中不存在 改条数据
      */
-    public boolean isExitObject(String type,Class object ,String params){
+    public boolean isExitObject(Class object ,String type ,String params){
         try {
-            QueryBuilder qb = daoSession.getDao(object).queryBuilder();
-           return daoSession.getDao(object).queryRaw(type, params).get(0)!=null ;
-
+            if(daoSession.getDao(object).queryRaw("where "+type+" like ? ", params).size() > 0 ){
+                return  true;
+            }else {
+                return false;
+            }
         } catch (Exception e) {
             Logger.e(e.toString());
         }
         return  false;
-
     }
     /**
      * 查询全部数据
@@ -143,14 +137,11 @@ public class BaseDao<T>
     }
     /**
      * 关闭数据库
+     * onDestroy 中调用
      */
-    public void closeDataBase(){
-        closeDaoSession();
-    }
-
     public void closeDaoSession(){
         if ( daoSession != null){
-            Logger.e(daoSession +"=========================");
+            Logger.e(daoSession +"========================helper="+helper);
             daoSession.clear();
             daoSession = null;
         }

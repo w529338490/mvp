@@ -23,13 +23,18 @@ import android.widget.FrameLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.umeng.message.PushAgent;
+
 import java.util.ArrayList;
 import my.easycommunity.adapter.PaperAdapter;
 import my.easycommunity.broadcast.NetWorkStateReceiver;
+import my.easycommunity.broadcast.NotificationBroadcast;
 import my.easycommunity.ui.news.NewsFragment;
 import my.easycommunity.ui.photo.PhotoFragment;
 import my.easycommunity.ui.user.UserFrament;
 import my.easycommunity.ui.video.VideoFragmet;
+
+import static my.easycommunity.common.MyApplication.UPDATE_STATUS_ACTION;
 
 public class MainActivity extends RxAppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
 
@@ -62,7 +67,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     private Fragment mCurrentFragment;
 
     //网络变化 broadcast
-    private NetWorkStateReceiver netWorkStateReceiver;;
+    private NetWorkStateReceiver netWorkStateReceiver;
+    private NotificationBroadcast notificationBroadcast;
 
     ArrayList<Fragment> list = new ArrayList<>();
     private final String[] mTitles = {"头条", "科技", "社会", "国内", "娱乐"};
@@ -74,6 +80,9 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+
+        //友盟统计应用启动数据
+        PushAgent.getInstance(this).onAppStart();
         mCurrentFragment = VideoFragmet.newInstance();
         adapter = new PaperAdapter(getSupportFragmentManager(), mTitles);
 
@@ -209,13 +218,18 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        if (netWorkStateReceiver == null)
-        {
-            netWorkStateReceiver = new NetWorkStateReceiver();
-        }
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(netWorkStateReceiver, filter);
+//        if (netWorkStateReceiver == null)
+//        {
+//            netWorkStateReceiver = new NetWorkStateReceiver();
+//        }
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+//        registerReceiver(netWorkStateReceiver, filter);
+
+        notificationBroadcast =new NotificationBroadcast();
+        IntentFilter filters = new IntentFilter();
+        filters.addAction(UPDATE_STATUS_ACTION);
+        registerReceiver(notificationBroadcast, filters);
     }
 
     private void goneHome(){
