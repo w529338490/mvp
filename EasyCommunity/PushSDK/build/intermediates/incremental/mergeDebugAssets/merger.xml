@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="D:\mvp\EasyCommunity\PushSDK\assets"/><source path="D:\mvp\EasyCommunity\PushSDK\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="D:\mvp\EasyCommunity\PushSDK\build-types\debug\assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="E:\mvp\EasyCommunity\PushSDK\assets"/><source path="E:\mvp\EasyCommunity\PushSDK\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="E:\mvp\EasyCommunity\PushSDK\build-types\debug\assets"/></dataSet></merger>

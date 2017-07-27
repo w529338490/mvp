@@ -2,6 +2,7 @@ package my.easycommunity.net;
 
 import com.orhanobut.logger.Logger;
 import java.util.concurrent.TimeUnit;
+import my.easycommunity.BuildConfig;
 import my.easycommunity.net.service.NewsService;
 import my.easycommunity.net.service.PhotoService;
 import okhttp3.OkHttpClient;
@@ -47,7 +48,7 @@ public class Api
                 Logger.d(message);
             }
         });
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        loggingInterceptor.setLevel(BuildConfig.DEBUG? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
 
         builder.addInterceptor(loggingInterceptor);
         //请求 超时 时间为5秒

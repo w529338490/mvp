@@ -9,10 +9,19 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+
+        debug {
+            debuggable true
+            buildConfigField "boolean", "DEBUG_MODE", "true"
+
+        }
         release {
+            debuggable false
+            buildConfigField "boolean", "DEBUG_MODE", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -63,7 +72,8 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0'
     compile project(':jcvideoplayer-lib')
     compile 'org.greenrobot:greendao:3.2.2'
-
+    //差分 java 方法个数大于 65536
+    compile 'com.android.support:multidex:1.0.0'
     //友盟推送
     compile project(':PushSDK')
 }

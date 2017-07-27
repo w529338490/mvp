@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.umeng.message.PushAgent;
-
 import java.util.ArrayList;
 import my.easycommunity.adapter.PaperAdapter;
 import my.easycommunity.broadcast.NetWorkStateReceiver;
@@ -33,8 +32,6 @@ import my.easycommunity.ui.news.NewsFragment;
 import my.easycommunity.ui.photo.PhotoFragment;
 import my.easycommunity.ui.user.UserFrament;
 import my.easycommunity.ui.video.VideoFragmet;
-
-import static my.easycommunity.common.MyApplication.UPDATE_STATUS_ACTION;
 
 public class MainActivity extends RxAppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
 
@@ -218,18 +215,14 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-//        if (netWorkStateReceiver == null)
-//        {
-//            netWorkStateReceiver = new NetWorkStateReceiver();
-//        }
-//        IntentFilter filter = new IntentFilter();
-//        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-//        registerReceiver(netWorkStateReceiver, filter);
+        if (netWorkStateReceiver == null)
+        {
+            netWorkStateReceiver = new NetWorkStateReceiver();
+        }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(netWorkStateReceiver, filter);
 
-        notificationBroadcast =new NotificationBroadcast();
-        IntentFilter filters = new IntentFilter();
-        filters.addAction(UPDATE_STATUS_ACTION);
-        registerReceiver(notificationBroadcast, filters);
     }
 
     private void goneHome(){
@@ -248,6 +241,13 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         fromSavedInstanceState =false;
         super.onUserLeaveHint();
     }
+
+    @Override
+    protected void onPause() {
+        fromSavedInstanceState =false;
+        super.onPause();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         //不保存，新闻页面的Fragment

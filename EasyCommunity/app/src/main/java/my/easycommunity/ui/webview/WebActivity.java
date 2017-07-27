@@ -13,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.orhanobut.logger.Logger;
 import de.greenrobot.event.EventBus;
 import my.easycommunity.R;
 import my.easycommunity.eventbus.WebViewEvent;
@@ -37,6 +38,7 @@ public class WebActivity extends AppCompatActivity implements webView,View.OnCli
         ButterKnife.inject(this);
         EventBus.getDefault().registerSticky(this);
         webPresenter =new WebPresenterImpl(this);
+        Logger.e("==========onCreate==============");
         webPresenter.start();
          initView();
     }

@@ -24,7 +24,13 @@ public class WebPresenterImpl implements webPresenter,WebInteractor.onCompletedL
     public void checkData(WebViewEvent event)
     {
         this.event=event;
-        webInteractor.checkData(event.getUrl(),event.getTitttle() );
+        if(event!=null){
+            webInteractor.checkData(event.getUrl(),event.getTitttle() );
+        }else {
+            webView.hideProgress();
+
+        }
+
     }
 
     @Override
