@@ -18,12 +18,13 @@ public class User
     @Unique @NotNull
     public String name;
     @NotNull
-    public long pwd;
+    public String pwd;
     @Generated(hash = 652780227)
-    public User(Long id, @NotNull String name, long pwd) {
+    public User(Long id, @NotNull String name, String pwd) {
         this.id = id;
         this.name = name;
-        this.pwd = pwd;
+        this.pwd =pwd;
+
     }
     @Generated(hash = 586692638)
     public User() {
@@ -40,10 +41,14 @@ public class User
     public void setName(String name) {
         this.name = name;
     }
-    public long getPwd() {
-        return this.pwd;
+
+    public String getPwd()
+    {
+        return pwd;
     }
-    public void setPwd(long pwd) {
+
+    public void setPwd(String pwd)
+    {
         this.pwd = pwd;
     }
 }

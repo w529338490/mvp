@@ -25,9 +25,11 @@ import butterknife.InjectView;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.umeng.message.PushAgent;
 import java.util.ArrayList;
+
+import de.greenrobot.event.EventBus;
 import my.easycommunity.adapter.PaperAdapter;
 import my.easycommunity.broadcast.NetWorkStateReceiver;
-import my.easycommunity.broadcast.NotificationBroadcast;
+import my.easycommunity.eventbus.MainFragmentEvent;
 import my.easycommunity.ui.news.NewsFragment;
 import my.easycommunity.ui.photo.PhotoFragment;
 import my.easycommunity.ui.user.UserFrament;
@@ -65,7 +67,6 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     //网络变化 broadcast
     private NetWorkStateReceiver netWorkStateReceiver;
-    private NotificationBroadcast notificationBroadcast;
 
     ArrayList<Fragment> list = new ArrayList<>();
     private final String[] mTitles = {"头条", "科技", "社会", "国内", "娱乐"};
@@ -77,6 +78,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+        EventBus.getDefault().registerSticky(this);
 
         //友盟统计应用启动数据
         PushAgent.getInstance(this).onAppStart();
@@ -235,6 +237,17 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         pager.setVisibility(View.VISIBLE);
         fragment_Container.setVisibility(View.GONE);
     }
+
+    public void onEventMainThread(MainFragmentEvent event) {
+
+        if(event.getFlag()==1){
+            tab_bottom.setSelectedItemId(R.id.item_welfare);
+        }
+        if(event.getFlag()==2){
+            tab_bottom.setSelectedItemId(R.id.item_user);
+        }
+
+    }
     //用户离开界面 (例如 按home键)
     @Override
     protected void onUserLeaveHint() {
@@ -280,12 +293,14 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             snackbar.show();
         } else
         {
+           // moveTaskToBack(true);
             System.exit(0);
         }
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if(netWorkStateReceiver!= null && netWorkStateReceiver.isOrderedBroadcast()){
             unregisterReceiver(netWorkStateReceiver);
         }

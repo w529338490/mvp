@@ -123,6 +123,20 @@ public class DaoController<T>
         }
         return  false;
     }
+
+    /**
+     * 查询某一个对象
+     */
+    public List<T> getSigleObject(Class object ,String type ,String params){
+        List<T> list = null;
+        try {
+            list=  daoSession.getDao(object).queryRaw("where "+type+" like ? ", params);
+
+        } catch (Exception e) {
+            Logger.e(e.toString());
+        }
+        return  list;
+    }
     /**
      * 查询全部数据
      */

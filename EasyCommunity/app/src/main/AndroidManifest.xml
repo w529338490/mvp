@@ -33,7 +33,7 @@
         <activity android:name=".ui.photo.PhotoDetailActivity">
         </activity>
 
-        <!-- 友盟配置-->
+        <!-- 友盟配置 -->
         <!-- 使用完全自定义消息来开启应用的服务进程的示例服务配置 -->
         <!-- 不是必需的服务，可以根据开发者的需求进行设置 -->
         <!-- 使用完全自定义消息来开启应用的服务进程的示例服务配置 -->
@@ -41,11 +41,15 @@
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="59789be6f43e486211000932" />
+            android:value="59789be6f43e486211000932"/>
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="c027e961d28e0c7fa765e69b754ae3cf" />
+            android:value="c027e961d28e0c7fa765e69b754ae3cf"/>
 
+        <activity android:name=".ui.login.LoginActivity">
+        </activity>
+        <activity android:name=".ui.register.RegisterActivity">
+        </activity>
     </application>
 
 </manifest>

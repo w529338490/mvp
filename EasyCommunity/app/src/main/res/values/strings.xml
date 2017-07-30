@@ -6,4 +6,9 @@
     <string name="main_videos">视屏</string>
     <string name="main_welfare">图片</string>
     <string name="main_user">我</string>
+    <string name="prompt_name">请输入用户名</string>
+    <string name="prompt_password">请输入密码</string>
+    <string name="action_sign_in_short">进入</string>
+    <string name="action_sign_in_register">登录</string>
+    <string name="login_progress_signing_in">正在登录..</string>
 </resources>

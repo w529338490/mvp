@@ -3,8 +3,10 @@ package my.easycommunity.common;
 import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
+import android.provider.Telephony;
 import android.support.multidex.MultiDex;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -18,10 +20,17 @@ import com.umeng.message.UTrack;
 import com.umeng.message.UmengMessageHandler;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
+
+import java.security.spec.MGF1ParameterSpec;
+
+import de.greenrobot.event.EventBus;
 import my.easycommunity.BuildConfig;
+import my.easycommunity.MainActivity;
 import my.easycommunity.R;
 import my.easycommunity.db.gen.DaoMaster;
 import my.easycommunity.db.gen.DaoSession;
+import my.easycommunity.eventbus.MainFragmentEvent;
+import my.easycommunity.ui.photo.PhotoFragment;
 
 /**
  * Created by Administrator on 2017/7/15.
@@ -76,13 +85,12 @@ public class MyApplication extends Application
             // 发送消息来自 自定义行为
             @Override
             public void dealWithCustomAction(Context context, UMessage msg) {
+                int meizi=0;
                 if ("go_custom".equals(msg.after_open)) {
-                    Logger.e("=====================msg====="+ msg.extra.get("activity"));
-                    JsonObject jsonObject = new Gson().fromJson(msg.custom, JsonObject.class);
-                    //Intent intent = new Intent(context, WebActivity.class);
-                    ////必须加入 Intent.FLAG_ACTIVITY_NEW_TASK
-                    //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    //startActivity(intent);
+                   if(msg.extra!=null){
+                       meizi = Integer.parseInt(msg.extra.get("meizi"));
+                       EventBus.getDefault().postSticky(new MainFragmentEvent(meizi));
+                   }
                 } else {
                     launchApp(context, msg);
                 }

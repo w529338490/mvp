@@ -9,4 +9,10 @@
     <color name="a">#00000000</color>
     <color name="white">#ffffff</color>
 
+    <!-- login -->
+    <color name="default_bk">#fafafa</color>
+    <color name="half_transparent_dark">#e0000000</color>
+    <color name="half_transparent_light">#AA000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="login_hint_color">#d4d4d4</color>
 </resources>

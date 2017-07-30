@@ -29,11 +29,8 @@ public abstract class BaseFragment<T> extends RxFragment implements BaseView<T>,
     public  View view;
     public BasePresenter presenter;
 
-
     public TwinklingRefreshLayout twinklingRefreshLayout;
-
     public FrameLayout progress;
-
     public TextView error_tv;
 
     public RecyclerView recyclerView;
