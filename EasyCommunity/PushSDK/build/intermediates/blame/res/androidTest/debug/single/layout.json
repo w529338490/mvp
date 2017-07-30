@@ -1,9 +1,5 @@
 [
     {
-        "merged": "E:\\mvp\\EasyCommunity\\PushSDK\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\upush_notification.xml",
-        "source": "E:\\mvp\\EasyCommunity\\PushSDK\\build\\intermediates\\bundles\\debug\\res\\layout\\upush_notification.xml"
-    },
-    {
         "merged": "D:\\mvp\\EasyCommunity\\PushSDK\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\upush_notification.xml",
         "source": "D:\\mvp\\EasyCommunity\\PushSDK\\build\\intermediates\\bundles\\debug\\res\\layout\\upush_notification.xml"
     }

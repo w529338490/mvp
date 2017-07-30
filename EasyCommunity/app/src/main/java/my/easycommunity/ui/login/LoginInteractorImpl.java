@@ -24,18 +24,7 @@ public class LoginInteractorImpl implements LoginInteractor
     @Override
     public void Login(final String username, final String pwd)
     {
-
-        /**
-         * 延迟2秒执行，模拟网络登录
-         */
-        new Handler().postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                doLogin(username, pwd);
-            }
-        },2000);
+        doLogin(username, pwd);
 
     }
 
@@ -56,6 +45,8 @@ public class LoginInteractorImpl implements LoginInteractor
             }else {
                 linster.onError("密码不正确");
             }
+        }else {
+            linster.onError("亲，你还未注册！");
         }
 
     }

@@ -1,8 +1,10 @@
 package my.easycommunity;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
@@ -30,10 +32,12 @@ import de.greenrobot.event.EventBus;
 import my.easycommunity.adapter.PaperAdapter;
 import my.easycommunity.broadcast.NetWorkStateReceiver;
 import my.easycommunity.eventbus.MainFragmentEvent;
+import my.easycommunity.ui.login.LoginActivity;
 import my.easycommunity.ui.news.NewsFragment;
 import my.easycommunity.ui.photo.PhotoFragment;
 import my.easycommunity.ui.user.UserFrament;
 import my.easycommunity.ui.video.VideoFragmet;
+import my.easycommunity.utill.MyLruChace;
 
 public class MainActivity extends RxAppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
 
@@ -163,9 +167,16 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
                                 changeBottomFragment(pFragment,"photo");
                                 break;
                             case R.id.item_user:
-                                goneHome();
-                                Fragment uFragment = fragmetManager.findFragmentByTag("user");
-                                changeBottomFragment(uFragment,"user");
+
+                                if(MyLruChace.Instace().getValue("user")!=null){
+                                    goneHome();
+                                    Fragment uFragment = fragmetManager.findFragmentByTag("user");
+                                    changeBottomFragment(uFragment,"user");
+                                }else {
+                                    Intent loginIntent=new Intent(MainActivity.this, LoginActivity.class);
+                                    startActivity(loginIntent);
+                                }
+
                                 break;
                         }
                         return true;
@@ -244,7 +255,9 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             tab_bottom.setSelectedItemId(R.id.item_welfare);
         }
         if(event.getFlag()==2){
+
             tab_bottom.setSelectedItemId(R.id.item_user);
+
         }
 
     }

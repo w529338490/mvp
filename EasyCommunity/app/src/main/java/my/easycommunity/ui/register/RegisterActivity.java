@@ -1,5 +1,6 @@
 package my.easycommunity.ui.register;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,12 +23,12 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView
     /**
      * 用户名
      */
-    @InjectView(R.id.name)
+    @InjectView(R.id.username)
     EditText name;
     /**
      * 密码
      */
-    @InjectView(R.id.password)
+    @InjectView(R.id.userpwd)
     EditText password;
 
     /**
@@ -63,7 +64,6 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView
             @Override
             public void onClick(View v)
             {
-
                 if(presenter!=null){
                     presenter.start();
                     presenter.register(name.getText().toString(),password.getText().toString());
@@ -79,12 +79,6 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView
         ProssBarUtil.hideBar(login_form);
         ProssBarUtil.showBar(progress);
         ToastUtil.show("注册成功！");
-        /**
-         * 保存用户，以便知道用户是登录状态
-         */
-        MyLruChace.Instace().sava("user",name.getText().toString());
-        EventBus.getDefault().post(new MainFragmentEvent(2));
-
         finish();
     }
 
@@ -100,5 +94,10 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView
     {
         ToastUtil.show(e);
 
+    }
+    @Override
+    public void onBackPressed()
+    {
+      finish();
     }
 }

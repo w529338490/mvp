@@ -17,7 +17,11 @@ import butterknife.ButterKnife;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import my.easycommunity.R;
+import my.easycommunity.common.DaoController;
+import my.easycommunity.db.gen.dbTable.SaveVideo;
 import my.easycommunity.entity.video.Video;
+import my.easycommunity.utill.MyLruChace;
+import my.easycommunity.utill.ToastUtil;
 import rx.Observer;
 
 /**
@@ -96,6 +100,47 @@ public class VideoViewAdapter extends RecyclerView.Adapter<VideoViewAdapter.Hold
                         @Override
                         public void onNext(Object o) {
 
+                            if(MyLruChace.Instace().getValue("user")==null)
+                            {
+                                ToastUtil.show("请先登录！");
+                                return;
+                            }
+                            DaoController<SaveVideo> videoDao=new DaoController<SaveVideo>();
+                            SaveVideo saveVideo =new SaveVideo();
+                            if(results.get(position).getGroup().text!=null&&results.get(position).getGroup().text.trim().length()!=0)
+                            {
+                                saveVideo.setTittle(results.get(position).getGroup().text+"");
+                            }else
+                            {
+                                ToastUtil.show("收藏失败");
+                                return;
+                            }
+                            if(!TextUtils.isEmpty(thunbUrl))
+                            {
+                                saveVideo.setThumburl(thunbUrl+"");
+                            }else
+                            {
+                                ToastUtil.show("收藏失败");
+                                return;
+                            }
+                            if(!TextUtils.isEmpty(results.get(position).group.mp4_url))
+                            {
+                                saveVideo.setVideouri(results.get(position).group.mp4_url+"");
+                                String name =MyLruChace.Instace().getValue("user");
+                                saveVideo.setUsername(name);
+
+                                if(  videoDao.insertObject(saveVideo)){
+                                  ToastUtil.show("收藏成功");
+                              }else {
+                                  ToastUtil.show("收藏失败");
+                              }
+                            }else
+                            {
+                                ToastUtil.show("收藏失败");
+                                return;
+
+                            }
+
                         }
                     });
         }
@@ -115,7 +160,6 @@ public class VideoViewAdapter extends RecyclerView.Adapter<VideoViewAdapter.Hold
         public Holder(View view)
         {
             super(view);
-            ButterKnife.inject(this,view);
             tittle = (TextView) view.findViewById(R.id.tittle);
             saved = (TextView) view.findViewById(R.id.saved);
             img_share = (TextView) view.findViewById(R.id.img_share);

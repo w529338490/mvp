@@ -19,7 +19,7 @@ public class RegisterPresenterImpl implements  RegisterPresenter,RegisterInterac
     @Override
     public void start()
     {
-        registeView.showProgress();
+      //  registeView.showProgress();
     }
 
     @Override
@@ -32,12 +32,13 @@ public class RegisterPresenterImpl implements  RegisterPresenter,RegisterInterac
     public void onError(String error)
     {
         registeView.showError(error);
+        registeView.hideProgress();
     }
 
     @Override
     public void onSuccess()
     {
-        registeView.hideProgress();
+        registeView.showProgress();
 
     }
 

@@ -13,18 +13,18 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class User
 {
-    @Id (autoincrement = true)
+    @Id (autoincrement = true )
+
     public Long id;
     @Unique @NotNull
     public String name;
     @NotNull
     public String pwd;
-    @Generated(hash = 652780227)
-    public User(Long id, @NotNull String name, String pwd) {
+    @Generated(hash = 1018271638)
+    public User(Long id, @NotNull String name, @NotNull String pwd) {
         this.id = id;
         this.name = name;
-        this.pwd =pwd;
-
+        this.pwd = pwd;
     }
     @Generated(hash = 586692638)
     public User() {

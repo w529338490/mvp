@@ -45,7 +45,7 @@
                         android:focusableInTouchMode="true" >
 
                         <EditText
-                            android:id="@+id/name"
+                            android:id="@+id/username"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:background="@drawable/tt_message_text_bg"
@@ -73,7 +73,7 @@
                         android:layout_marginTop="15dp" >
 
                         <EditText
-                            android:id="@+id/password"
+                            android:id="@+id/userpwd"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:background="@drawable/tt_message_text_bg"

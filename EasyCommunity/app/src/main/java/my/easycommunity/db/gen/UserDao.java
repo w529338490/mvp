@@ -26,7 +26,7 @@ public class UserDao extends AbstractDao<User, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Pwd = new Property(2, long.class, "pwd", false, "PWD");
+        public final static Property Pwd = new Property(2, String.class, "pwd", false, "PWD");
     }
 
 
@@ -44,7 +44,7 @@ public class UserDao extends AbstractDao<User, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"USER\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"NAME\" TEXT NOT NULL UNIQUE ," + // 1: name
-                "\"PWD\" INTEGER NOT NULL );"); // 2: pwd
+                "\"PWD\" TEXT NOT NULL );"); // 2: pwd
     }
 
     /** Drops the underlying database table. */
@@ -62,7 +62,7 @@ public class UserDao extends AbstractDao<User, Long> {
             stmt.bindLong(1, id);
         }
         stmt.bindString(2, entity.getName());
-        stmt.bindLong(3, entity.getPwd());
+        stmt.bindString(3, entity.getPwd());
     }
 
     @Override
@@ -74,7 +74,7 @@ public class UserDao extends AbstractDao<User, Long> {
             stmt.bindLong(1, id);
         }
         stmt.bindString(2, entity.getName());
-        stmt.bindLong(3, entity.getPwd());
+        stmt.bindString(3, entity.getPwd());
     }
 
     @Override
@@ -87,7 +87,7 @@ public class UserDao extends AbstractDao<User, Long> {
         User entity = new User( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // name
-            cursor.getLong(offset + 2) // pwd
+            cursor.getString(offset + 2) // pwd
         );
         return entity;
     }
@@ -96,7 +96,7 @@ public class UserDao extends AbstractDao<User, Long> {
     public void readEntity(Cursor cursor, User entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.getString(offset + 1));
-        entity.setPwd(cursor.getLong(offset + 2));
+        entity.setPwd(cursor.getString(offset + 2));
      }
     
     @Override

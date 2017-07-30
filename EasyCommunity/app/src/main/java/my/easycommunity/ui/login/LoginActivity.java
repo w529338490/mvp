@@ -2,6 +2,7 @@ package my.easycommunity.ui.login;
 
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,8 +13,11 @@ import android.widget.ScrollView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 import my.easycommunity.R;
+import my.easycommunity.eventbus.MainFragmentEvent;
 import my.easycommunity.ui.register.RegisterActivity;
+import my.easycommunity.utill.MyLruChace;
 import my.easycommunity.utill.ProssBarUtil;
 import my.easycommunity.utill.ToastUtil;
 
@@ -60,9 +64,15 @@ public class LoginActivity extends AppCompatActivity implements  LoginView ,View
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
         loginPresenter =new LoginPresenterImpl(this);
-        loginPresenter.start();
+       // loginPresenter.start();
+        setUpView();
 
+    }
 
+    private void setUpView()
+    {
+        regest_in_button.setOnClickListener(this);
+        sign_in_button.setOnClickListener(this);
     }
 
     @Override
@@ -84,7 +94,6 @@ public class LoginActivity extends AppCompatActivity implements  LoginView ,View
                 Intent intent =new Intent(this,RegisterActivity.class);
                 startActivity(intent);
 
-
                 break;
         }
 
@@ -102,6 +111,14 @@ public class LoginActivity extends AppCompatActivity implements  LoginView ,View
     {
         ProssBarUtil.hideBar(progress);
         ProssBarUtil.showBar(login_form);
+        ToastUtil.show("登录成功");
+        /**
+         * 保存用户，以便知道用户是登录状态
+         */
+        MyLruChace.Instace().sava("user",name.getText().toString());
+        EventBus.getDefault().post(new MainFragmentEvent(2));
+        finish();
+
     }
 
     @Override
