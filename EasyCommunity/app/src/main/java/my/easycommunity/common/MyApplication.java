@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.provider.Telephony;
-import android.support.multidex.MultiDex;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 import com.google.gson.Gson;
@@ -20,12 +19,11 @@ import com.umeng.message.UTrack;
 import com.umeng.message.UmengMessageHandler;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
+import com.umeng.message.lib.BuildConfig;
 
 import java.security.spec.MGF1ParameterSpec;
 
 import de.greenrobot.event.EventBus;
-import my.easycommunity.BuildConfig;
-import my.easycommunity.MainActivity;
 import my.easycommunity.R;
 import my.easycommunity.db.gen.DaoMaster;
 import my.easycommunity.db.gen.DaoSession;
@@ -45,13 +43,11 @@ public class MyApplication extends Application
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(base);
     }
     @Override
     public void onCreate()
     {
-        super.onCreate();
-        MultiDex.install(this);
+        super.onCreate();;
         //设置 日志模式 debug模式下打印 日志
         LogLevel logLevel = BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE;
         Logger.init().logLevel(logLevel);

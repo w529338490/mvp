@@ -2,15 +2,18 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "my.easycommunity"
         minSdkVersion 17
         targetSdkVersion 25
         versionCode 2
         versionName "2.0"
-        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    defaultConfig {
+        //添加如下配置就OK了
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
     }
     buildTypes {
 
@@ -72,8 +75,6 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0'
     compile project(':jcvideoplayer-lib')
     compile 'org.greenrobot:greendao:3.2.2'
-    //差分 java 方法个数大于 65536
-    compile 'com.android.support:multidex:1.0.0'
     //友盟推送
     compile project(':PushSDK')
 }
