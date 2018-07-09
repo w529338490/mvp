@@ -1,4 +1,4 @@
-package robot.nsk.com.robot_app.units;
+﻿package robot.nsk.com.robot_app.units;
 
 import com.orhanobut.logger.Logger;
 
@@ -165,8 +165,8 @@ public class RxJavaDownloder {
                 FileOutputStream fos=null;
                 try {
                     byte[] fileReader = new byte[1024];
-                    if(fileName.contains("01_A_00")){
-                        fileName = fileName.replace(".aitrip","");
+                    if(fileName.contains("")){
+                        fileName = fileName.replace(","");
                     }
                     String videoPath = fileParent + "/" + fileName;
                     File videoFile = new File(videoPath);

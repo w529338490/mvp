@@ -1,4 +1,4 @@
-package robot.nsk.com.robot_app.net;
+﻿package robot.nsk.com.robot_app.net;
 
 import android.util.Log;
 import android.widget.Adapter;
@@ -52,10 +52,10 @@ public class API  {
 
     }
     public static Retrofit.Builder getDownLoderbulider (){
-        //https://audio-shuimian.oss-cn-beijing.aliyuncs.com/testappman/01_A_00.mp3",
+        //
         SingletonHolder.DOWNLODER_BUILDER
-                .baseUrl("http://192.168.1.199:8080/")
-         //      .baseUrl("http://192.168.199.166:8080/")
+                .baseUrl("")
+         //      .baseUrl("")
                 .client(builder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());

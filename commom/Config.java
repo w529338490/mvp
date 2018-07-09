@@ -1,4 +1,4 @@
-package robot.nsk.com.robot_app.commom;
+﻿package robot.nsk.com.robot_app.commom;
 
 /**
  * Created by Administrator on 2018/5/20.
@@ -21,7 +21,7 @@ import robot.nsk.com.robot_app.units.AppAplication;
 public class Config {
 
     //服务器
-    public final static String BASE_URL = "http://192.168.199.197/index.php/";
+    public final static String BASE_URL = "";
     //奔溃日志 本地文件夹
     public final static String CRASH_DIR_PATH = Environment.getExternalStorageDirectory() + File.separator + "AppCrash" + File.separator;
 
